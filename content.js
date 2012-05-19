@@ -140,7 +140,7 @@ function toggleJunk(node){
 
     var tokens = tokenize(userData.posts[story_id].text_content);
     var sugDiv = "<div class='term-offer'><h1>This story has been marked as junk.</h1><p>";
-    if(tokens.length) sugdiv +="<b>Click any of the following terms to add them to the blacklist, or click outside to dismiss this message.</b><br/><br/>" +
+    if(tokens.length) sugDiv +="<b>Click any of the following terms to add them to the blacklist, or click outside to dismiss this message.</b><br/><br/>" +
     "<span class='term-click'>" + tokens.sort().join("</span> <span class='term-click'>") + "</span>";
     sugDiv +="</p></div>";
     
