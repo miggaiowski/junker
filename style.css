@@ -7,3 +7,26 @@
   opacity: 1.0 !important;
   -webkit-transition: opacity 0.5s linear;
 }
+
+#lean_overlay {
+    position: fixed;
+    z-index:100;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width:100%;
+    background: #000;
+    display: none;
+}
+
+.term-offer{
+  background-color: #F0F0F0;
+}
+
+.term-click{
+  cursor: pointer;
+}
+
+.term-click:hover{
+  color: #0000FF;
+}

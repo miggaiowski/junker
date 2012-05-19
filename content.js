@@ -94,9 +94,9 @@ function doTheHide(node) {
   if (!mostraSpam) 
     node.hide("slow");
   else {
-    node.css("opacity", 0.5);
-//    node.fadeTo("slow", 0.3, null);
-//    node.addClass("faded");
+//    node.css("opacity", 0.5);
+    node.fadeTo("slow", 0.3, null);
+    node.addClass("faded");
   }
 }
 
@@ -137,6 +137,30 @@ function toggleJunk(node){
   //  classifier.trainWith(userData.posts[story_id], "junk");
     
     doTheHide(node);
+
+    $(node).before("<div class='term-offer'><h1>This story has been marked as junk.</h1><p>" + 
+    "<b>Click any of the following terms to add them to the blacklist, or click outside to dismiss this message.</b><br/><br/>" +
+    "<span class='term-click'>" + tokenize(userData.posts[story_id].text_content).sort().join("</span> <span class='term-click'>") +
+    "</span></p></div>");
+    
+    $(document).mouseup(function(e){
+        var container = $(".term-offer");
+
+        if (container.has(e.target).length === 0)
+            container.slideUp(500);
+    });
+    
+    $('.term-click').click(function(){
+      userData.addToBlacklist($(this).text());
+      $(this).hide("slow");
+      
+      chrome.extension.sendRequest({method: "set", userData: userData.getJSON()});
+      stor.saveIdDict(userData);
+      
+    });
+    
+    $(".term-offer").blur(function(){ this.slideUp(500); });
+    
 
   //  if (userData.filterMode == "both" || userData.filterMode == "bayes")
   //    classifier.trainWith(userData.posts[story_id], "junk");

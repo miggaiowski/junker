@@ -32,6 +32,8 @@ function save_options() {
 
     $("#save_button").attr("disabled", true);
     $("#save_button").text("Saved");
+    
+    chrome.tabs.reload();
 
   });
 }
