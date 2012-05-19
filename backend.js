@@ -1,5 +1,5 @@
 // Junk Dictionary Class
-var  JunkDic = function (id,dictionary) {
+var JunkDic = function (id,dictionary) {
   this.id = id;
   if (dictionary == null){
     var b = new Array();
@@ -117,16 +117,17 @@ Storage.prototype = {
       var idSon =  userDic.getJSON();
       a[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(a);
-    } 
-    else{
+      chrome.extension.sendRequest({method: "set", userData: idSon});
+    } else {
       var aux = JSON.parse(localStorage.perf);
-      //var result = this.drill(id,aux) 
       var idSon = userDic.getJSON();
       aux[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(aux);
+      chrome.extension.sendRequest({method: "set", userData: idSon});
     }
     
   },
+  
   getIdDict : function (id,callback){
     if (localStorage.perf == null){
       var a = {};

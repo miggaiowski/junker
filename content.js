@@ -1,28 +1,21 @@
-document.body.addEventListener("DOMNodeInserted", newElement, false);
-
 var stor = new Storage();
-var userData = stor.getIdDict('0');
+var userData;
 var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
-
 var classifier = new Classifier();
 
-/*
-chrome.extension.sendRequest({method: "getStatus"}, function(response) {
-  //var stor = new Storage();
-  if (response!=null){
-    var bl = response.status[0]['blacklist'];
-    var show = response.status[0]['show'];
-    var filterMode = response.status[0]['filterMode'];
-    userData.blacklist = bl;
-    userData.show = show;
-    userData.filterMode = filterMode;
-    stor.saveIdDict(userData);
-    userData = stor.getIdDict('0');
-  }
+chrome.extension.sendRequest({method: "get"}, function(response){
+  if(!response.userData)
+    userData = new JunkDic('0');
+  else
+    userData = new JunkDic('0', response.userData);
+
+  stor.saveIdDict(userData);
+  
+  document.body.addEventListener("DOMNodeInserted", newElement, false);
+  $('li.uiUnifiedStory').each(newElement);
 });
-*/
 
 function newElement(el) {
   // console.info(userData.filterMode);
@@ -57,8 +50,8 @@ function newElement(el) {
     doTheHide(story);
     return;
   } else {
-    if (Math.random() > 0.75)
-      classifier.trainWith(post, "notjunk");
+//    if (Math.random() > 0.75)
+//      classifier.trainWith(post, "notjunk");
   }
 
   if (userData.filterMode == "bl_only") {
@@ -72,24 +65,24 @@ function newElement(el) {
     if (classifier.isSpam(post)){
       setStoryRating(story_id, true);
       doTheHide(story);
-      classifier.trainWith(post, "junk");
+//      classifier.trainWith(post, "junk");
       return;
     }
     else {
-      if (Math.random() > 0.9)
-        classifier.trainWith(post, "notjunk");
+//      if (Math.random() > 0.9)
+//        classifier.trainWith(post, "notjunk");
     }
   }
   else {
     if (userData.inBlacklist(post.raw_text) || classifier.isSpam(post)){
       setStoryRating(story_id, true);
       doTheHide(story);
-      classifier.trainWith(post, "junk");
+//      classifier.trainWith(post, "junk");
       return;
     }
     else {
-      if (Math.random() > 0.9)
-        classifier.trainWith(post, "notjunk");
+//      if (Math.random() > 0.9)
+//        classifier.trainWith(post, "notjunk");
     }
   }
 }
@@ -135,20 +128,20 @@ function toggleJunk(node){
   if(userData.ratings[ story_id ]){
     setStoryRating(story_id, false);
     if (userData.filterMode == "both" || userData.filterMode == "bayes") {
-      classifier.trainWith(userData.posts[story_id], "notjunk");
-      classifier.trainWith(userData.posts[story_id], "notjunk");
+  //    classifier.trainWith(userData.posts[story_id], "notjunk");
+  //    classifier.trainWith(userData.posts[story_id], "notjunk");
     }
     doTheShow(node);
     
     return false;   
   } else {
     setStoryRating(story_id, true);
-    classifier.trainWith(userData.posts[story_id], "junk");
+  //  classifier.trainWith(userData.posts[story_id], "junk");
     
     doTheHide(node);
 
-    if (userData.filterMode == "both" || userData.filterMode == "bayes")
-      classifier.trainWith(userData.posts[story_id], "junk");
+  //  if (userData.filterMode == "both" || userData.filterMode == "bayes")
+  //    classifier.trainWith(userData.posts[story_id], "junk");
 
     return true;
   }
