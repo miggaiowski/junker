@@ -4,9 +4,10 @@
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
   </head>
   <body>
-    <div id="mode_div">
+    <div class="groupdiv" id="mode_div">
       <div class="control-group">
-        <label class="control-label">Filter Mode</label>
+        <h1>Filter Mode</h1>
+<!-- <label class="control-label">Filter Mode</label> -->
         <div class="controls">
           <label class="radio">
             <input type="radio" name="filterModes" id="bl_only" value="bl_only" checked>
@@ -23,13 +24,13 @@
         </div>
       </div>
     </div>
-    <div id="bl_div">
-      <label for="blacklist">Blacklick</label>
+    <div class="groupdiv" id="bl_div">
+      <h1>Define your Blacklist, separated by commas:</h1>
       <textarea id="blacklist" class="input-xlarge" rows="5" cols="100" ></textarea>
     </div>
-    <div id="bl_div">
+    <div id="mem_size_div">
       <div class="control-group">
-        <label class="control-label">Memory Size</label>
+        <h1>Memory Size</h1>
         <div class="controls">
           <label class="radio">
             <input type="radio" name="memorySize" id="memorySize10" value="10" unchecked>
@@ -42,6 +43,17 @@
           <label class="radio">
             <input type="radio" name="memorySize" id="memorySize50" value="50" unchecked>
             50
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="groupdiv" id="showSpamDiv">
+      <div class="control-group">
+        <h1>Show/Hide Junk</h1>
+        <div class="controls">
+          <label class="checkbox" for="showJunk">
+            <input type="checkbox" name="showhidejunk" id="showJunk" value="showJunk" unchecked>
+            Show Junk
           </label>
         </div>
       </div>

@@ -1,26 +1,27 @@
 document.body.addEventListener("DOMNodeInserted", newElement, false);
 
-chrome.extension.sendRequest({method: "getStatus"}, function(response) {
-  //var stor = new Storage();
-  if (response!=null){
-   //localStorage.perf = JSON.stringify(response.status);
-   //console.info(response);
-   userData = stor.getIdDict('0');
-   var resp = response.status[0]['blacklist'];
-   userData.blacklist = resp;
-   stor.saveIdDict(userData);
-   //stor.saveIdDict(user);
-  }
-
-
-});
-
 var stor = new Storage();
 var userData = stor.getIdDict('0');
 var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
 
+var classifier = new Classifier();
+
+chrome.extension.sendRequest({method: "getStatus"}, function(response) {
+  //var stor = new Storage();
+  if (response!=null){
+    //localStorage.perf = JSON.stringify(response.status);
+    //console.info(response);
+    // userData = stor.getIdDict('0');
+    var bl = response.status[0]['blacklist'];
+    var show = response.status[0]['show'];
+    userData.blacklist = bl;
+    userData.show = show;
+    stor.saveIdDict(userData);
+    userData = stor.getIdDict('0');
+  }
+});
 
 function newElement(el){
   var story = $(".uiUnifiedStory").not(".junker_known").first();
@@ -48,11 +49,14 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  //console.info(post); 
-  if (userData.inBlacklist(post.raw_text)){
+  if (userData.inBlacklist(post.raw_text) || classifier.isSpam(post)){
     setStoryRating(story_id, true);
     doTheHide(story);
     return;
+  }
+  else {
+    if (Math.random() > 0.5)
+      classifier.trainWith(post, "notjunk");
   }
 }
 
@@ -64,7 +68,7 @@ function doTheHide(node) {
   // var mostraSpam = userData.showSpam;
   var mostraSpam = true;
   if (!mostraSpam) 
-    node.hide();
+    node.hide("slow");
   else {
     // node.css("opacity", 0.5);
     node.fadeTo("slow", 0.3, null);
@@ -102,6 +106,7 @@ function toggleJunk(node){
   } else {
     setStoryRating(story_id, true);
     doTheHide(node);
+    classifier.trainWith(userData.posts[story_id], "junk");
     return true;
   }
 }
@@ -140,7 +145,7 @@ function existeMenuzinho() {
 }
 
 function async(fn) {
-  setTimeout(fn, 200);
+  setTimeout(fn, 300);
 }
 
 function sometimeWhen(existeMenuzinho, mudaMenu, postPai) {

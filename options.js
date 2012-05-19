@@ -21,38 +21,27 @@ function save_options() {
   //userData.setMemorySize(memorySize);
   userData.filterMode = filterMode;
   userData.memorySize = memorySize;
+  //var show = $('input[name=showhidejunk]:checkbox:checked').val();
+  var show = $('input[type=checkbox]').is(':checked');
+  userData.show = show;
   stor.saveIdDict(userData);
 
   chrome.extension.sendRequest({method: "getStatus"}, function(response) {
-    //var stor = new Storage();
-    //if (response!=null){
-     //localStorage.perf = JSON.stringify(response.status);
-     //console.info(response);
-     //userData = stor.getIdDict('0');
-     //var resp = response.status[0]['blacklist'];
-     //userData.blacklist = resp;
-     //stor.saveIdDict(userData);
-     //stor.saveIdDict(user);
-    //}
-
-
-  });
+  }); //Send the new class 
 }
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-  var stor = new Storage();
+  var stor = new Storage(); //new storage and get data
   var userData = stor.getIdDict('0');
-  //console.info(userData);
-  //var blackList = userData.blacklist;
-  $('#blacklist').val(userData.blacklist);
+  $('#blacklist').val(userData.blacklist); 
   var filterMode = $('#' + userData.filterMode);
   filterMode.attr('checked', true);
   var memorySize = $('#memorySize' + userData.memorySize);
-  //console.info(memorySize);
-  memorySize.attr('checked', true);
+  var show = $('#showJunk');
+  if (userData.show)
+    show.attr('checked', true);
   stor.saveIdDict(userData);
-  //console.info(filterMode);
 }
 
 restore_options();

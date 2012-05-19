@@ -8,11 +8,12 @@ var  JunkDic = function (id,dictionary) {
     this.blacklist = b;
     this.junk_posts = j;
     this.notjunk_posts = n;
-    this.memorySize = "";
-    this.filterMode = "";
-    this.bayes = null;
+    this.memorySize = 50;
+    this.filterMode = "both";
+    this.bayes_data = null;
     this.posts = {};
     this.ratings = {};
+    this.show = false;
   }
   else {
     this.blacklist = dictionary['blacklist'];
@@ -20,9 +21,10 @@ var  JunkDic = function (id,dictionary) {
     this.notjunk_posts = dictionary['notjunk_posts'];
     this.memorySize = dictionary['memorySize'];
     this.filterMode = dictionary['filterMode'];
-    this.bayes = dictionary['bayes'];
+    this.bayes_data = dictionary['bayes_data'];
     this.posts = dictionary['posts'];
     this.ratings = dictionary['ratings'];
+    this.show = dictionary['show'];
   }
 }
 
@@ -41,7 +43,7 @@ JunkDic.prototype = {
     for (var word in tokens){
       //print("Running " + word);
       for (var bl in this.blacklist) {
-        //console.info("Comparing token: " + tokens[word] + " with "+ this.blacklist[bl]);
+        // console.info("Comparing token: " + tokens[word] + " with "+ this.blacklist[bl]);
         if (tokens[word] == this.blacklist[bl]){
           return true;
         }
@@ -73,9 +75,10 @@ JunkDic.prototype = {
     r['id'] = this.id;
     r['memorySize'] = this.memorySize;
     r['filterMode'] = this.filterMode; 
-    r['bayes'] = this.bayes;
+    r['bayes_data'] = this.bayes_data;
     r['posts'] = this.posts;
     r['ratings'] = this.ratings;
+    r['show'] = this.show
     return r;
   },
 
