@@ -17,8 +17,14 @@ var stopwords = {
     "people": true,
     "print": true,
     "photo": true,
+    "share":true,
     "this": true,
     "www": true,
+    "comentar":true,
+    "like":true,
+    "comment":true,
+    "compartilhar":true,
+
     
     // stopwords
     "a": true,

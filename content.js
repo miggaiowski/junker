@@ -14,8 +14,10 @@ chrome.extension.sendRequest({method: "getStatus"}, function(response) {
     //localStorage.perf = JSON.stringify(response.status);
     //console.info(response);
     // userData = stor.getIdDict('0');
-    var resp = response.status[0]['blacklist'];
-    userData.blacklist = resp;
+    var bl = response.status[0]['blacklist'];
+    var show = response.status[0]['show'];
+    userData.blacklist = bl;
+    userData.show = show;
     stor.saveIdDict(userData);
     userData = stor.getIdDict('0');
   }
@@ -47,7 +49,7 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  if (userData.inBlacklist(post.text_content) || classifier.isSpam(post)){
+  if (userData.inBlacklist(post.raw_text) || classifier.isSpam(post)){
     setStoryRating(story_id, true);
     doTheHide(story);
     return;
@@ -63,8 +65,7 @@ function getUid(){
 }
 
 function doTheHide(node) {
-  // var mostraSpam = userData.showSpam;
-  var mostraSpam = true;
+  var mostraSpam = userData.show;
   if (!mostraSpam) 
     node.hide("slow");
   else {
