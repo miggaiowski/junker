@@ -1,6 +1,4 @@
-
-
-
+//document.body.addEventListener('DOMNodeInserted', doit, false);
 
 ///Junk Dictionary Class
 var  JunkDic = function (id,dictionary) {
@@ -12,12 +10,16 @@ var  JunkDic = function (id,dictionary) {
      this.blacklist = b;
      this.junk_posts = j;
      this.notjunk_posts = n;
+     this.memorySize = "";
+     this.filterMode = ""
   }
   else{
 
     this.blacklist = dictionary['blacklist'];
     this.junk_posts = dictionary['junk_posts'];
     this.notjunk_posts = dictionary['notjunk_posts'];
+    this.memorySize = dictionary['memorySize'];
+    this.filterMode = dictionary['filterMode'];
   }//
 
 }
@@ -63,9 +65,34 @@ JunkDic.prototype = {
   r[this.id]['blacklist'] = this.blacklist;
   r[this.id]['junk_posts'] = this.junk_posts;
   r[this.id]['notjunk_posts'] = this.notjunk_posts;
-  r[this.id]['id'] = this.id
+  r[this.id]['id'] = this.id;
+  r[this.id]['memorySize'] = this.memorySize;
+  r[this.id]['filterMode'] = this.filterMode;
+  
   return r;
- }
+ },
+
+//  getBlacklist: function(callback) {
+//      return this.blacklist;
+//  },
+// 
+// 
+//  getJunkPosts: function(callback) {
+//      return this.junk_posts;
+//  },
+// 
+// 
+//  getBlacklist: function(callback) {
+//      return this.blacklist;
+//  },
+
+
+   //  this.blacklist = dictionary['blacklist'];
+   //  this.junk_posts = dictionary['junk_posts'];
+   //  this.notjunk_posts = dictionary['notjunk_posts'];
+   //  this.memorySize = dictionary['memorySize'];
+   //  this.filterMode = dictionary['filterMode'];
+
 }
 
 
@@ -114,9 +141,13 @@ Storage.prototype = {
 //USAGE
 
 
-
+//function doit(){
 //var sto = new Storage();
 //var userDict = sto.getIdDict('00001');
 //userDict.addToBlacklist('merdinha');
 //userDict.addToBlacklist('bostinha')
+//
+//console.info(userDict.blacklist);
+//}
 
+//doit();
