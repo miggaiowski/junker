@@ -12,7 +12,7 @@ var nodeList = new Array();
 var globalContainer = $("#globalContainer").first();
 
 var stor = new Storage();
-console.info(localStorage.perf);
+//console.info(localStorage.perf);
 var userData = stor.getIdDict('0');
 
 // var post_data;
@@ -45,7 +45,7 @@ function newElement(el){
 
   
   if(userData.ratings[story_id]){ 
-    actOnJunk(story);
+    story.hide();
     return;
   }
   
@@ -59,8 +59,7 @@ function newElement(el){
   
   if (userData.inBlacklist(post.text_content)){
     setStoryRating(story_id, true);
-    console.info(story);
-    actOnJunk(story);
+    story.hide("slow");
     return;
   }
 }
@@ -97,9 +96,8 @@ function toggleJunk(node){
     
     return false;   
   } else {
+    node.hide("slow");
     setStoryRating(story_id, true);
-    actOnJunk(node);
-    
     return true;
   }
 }
