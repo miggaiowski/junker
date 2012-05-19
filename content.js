@@ -6,17 +6,17 @@ var globalContainer = $("#globalContainer").first();
 var stor = new Storage();
 var userData = stor.getIdDict('0');
 
-var post_data;
-if (localStorage.post_data == null) {
-  post_data = {
-    posts: {},
-    deleted: {}
-  }
+// var post_data;
+// if (localStorage.post_data == null) {
+//   post_data = {
+//     posts: {},
+//     deleted: {}
+//   }
   
-  localStorage.post_data = JSON.stringify(post_data);
-} else {
-  post_data = JSON.parse(localStorage.post_data);
-}
+//   localStorage.post_data = JSON.stringify(post_data);
+// } else {
+//   post_data = JSON.parse(localStorage.post_data);
+// }
 
 function getBlackList() {
   var bl = JSON.parse(localStorage.blackList);
@@ -35,13 +35,15 @@ function newElement(el){
   var story_id = getStoryId(story);
 
   
-  if(post_data.deleted[story_id]){ 
+  if(userData.ratings[story_id]){ 
     actOnJunk(story);
     return;
   }
   
   // Extract the post's data
   var post = parsePost(story);  
+  if (!post)
+    return;
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
@@ -79,7 +81,7 @@ function actOnJunk(node) {
 function toggleJunk(node){
   var story_id = getStoryId(node);
   
-  if(post_data.deleted[ story_id ]){
+  if(userData.ratings[ story_id ]){
     setStoryRating(story_id, false);
     disactOnJunk(node);
     
@@ -93,8 +95,8 @@ function toggleJunk(node){
 }
 
 function setStoryRating(story_id, rating){
-  post_data.deleted[ story_id ] = rating;
-  localStorage.post_data = JSON.stringify(post_data);
+  userData.ratings[ story_id ] = rating;
+  stor.saveIdDict(userData);
 }
 
 function getStoryId(node){
@@ -149,7 +151,7 @@ function mudaMenu(postPai) {
     var cloned = menuItem.clone(true);
     cloned = modifySpamMenuItem(cloned, postPai);
     menuItem.parent().append(cloned);
-    if (post_data.deleted[story_id])
+    if (userData.ratings[story_id])
       $(cloned).addClass('checked');
   }
 }
