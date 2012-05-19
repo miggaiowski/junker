@@ -8,6 +8,7 @@ var globalContainer = $("#globalContainer").first();
 
 //var classifier = new Classifier();
 
+/*
 chrome.extension.sendRequest({method: "getStatus"}, function(response) {
   //var stor = new Storage();
   if (response!=null){
@@ -21,6 +22,7 @@ chrome.extension.sendRequest({method: "getStatus"}, function(response) {
     userData = stor.getIdDict('0');
   }
 });
+*/
 
 function newElement(el) {
   // console.info(userData.filterMode);
@@ -133,8 +135,8 @@ function toggleJunk(node){
   if(userData.ratings[ story_id ]){
     setStoryRating(story_id, false);
     if (userData.filterMode == "both" || userData.filterMode == "bayes") {
-      classifier.trainWith(userData.posts[story_id], "notjunk");
-      classifier.trainWith(userData.posts[story_id], "notjunk");
+//      classifier.trainWith(userData.posts[story_id], "notjunk");
+//      classifier.trainWith(userData.posts[story_id], "notjunk");
     }
     doTheShow(node);
     
