@@ -1,9 +1,9 @@
 {
   "name": "Junker",
-  "version": "0.1",
+  "version": "0.5",
   "manifest_version": 2,
   "description":
-    "Clean up FB feed.",
+    "Clean up your facebook news feed.",
   "icons": {"48": "icon48.png", "72": "icon72.png", "128": "icon128.png"},
   "permissions": [
     "contextMenus",
