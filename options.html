@@ -1,0 +1,64 @@
+<html>
+<head><title>My Test Extension Options</title></head>
+<script type="text/javascript">
+// Saves options to localStorage.
+function save_options() {
+  var select = document.getElementById("color");
+  var color = select.children[select.selectedIndex].value;
+  localStorage["favorite_color"] = color;
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Options Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores options from localstorage 
+function restore_options() {
+  var junker = localStorage["junker"];
+  
+  if (!junker) {
+    return;
+  }
+
+  // Restore mode 
+  var mode = document.getElementById("mode");
+  
+  for (var i = 0; i < select.children.length; i++) {
+    var child = select.children[i];
+    if (child.value == favorite) {
+      child.selected = "true";
+      break;
+    }
+  }
+
+
+}
+</script>
+<body onload="restore_options()">
+  <div id="mode_div">
+    <label>Filter Mode</label>
+    <select id="mode">
+       <option value="blacklist">Blacklist only</option>
+       <option value="bayes">Intelligent mode only</option>
+       <option value="black_bayes">Full Power</option>
+    </select>
+  </div>
+  <div id="bl_div">
+    <label>Blacklist</label>
+    <input id="blacklist" type="text" placeholder="List of prohibited...">
+  </div>
+  <div id="bl_div">
+    <label>Filter Memory</label>
+    <select id="memory_size">
+       <option value="10">10</option>
+       <option value="25">25</option>
+       <option value="50">50</option>
+    </select>
+  </div>
+<button onclick="save_options()">Save</button>
+<div id="status"></div>
+</body>
+</html>
+
