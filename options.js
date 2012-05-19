@@ -37,9 +37,10 @@ function save_options() {
       userData.filterMode = filterMode;
       stor.saveIdDict(userData);
       userData = stor.getIdDict('0');
-    }*/
+    }
 
     }); //Send the new class 
+    */
 }
 
 // Restores select box state to saved value from localStorage.
