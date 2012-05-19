@@ -12,6 +12,7 @@ var  JunkDic = function (id,dictionary) {
     this.filterMode = "both";
     this.bayes_data = null;
     this.posts = {};
+    this.ratings = {};
   }
   else {
     this.blacklist = dictionary['blacklist'];
@@ -21,6 +22,7 @@ var  JunkDic = function (id,dictionary) {
     this.filterMode = dictionary['filterMode'];
     this.bayes_data = dictionary['bayes_data'];
     this.posts = dictionary['posts'];
+    this.ratings = dictionary['ratings'];
   }
 }
 
@@ -39,6 +41,7 @@ JunkDic.prototype = {
     for (var word in tokens){
       //print("Running " + word);
       for (var bl in this.blacklist) {
+        // console.info("Comparing token: " + tokens[word] + " with "+ this.blacklist[bl]);
         if (tokens[word] == this.blacklist[bl]){
           return true;
         }
@@ -72,6 +75,7 @@ JunkDic.prototype = {
     r['filterMode'] = this.filterMode; 
     r['bayes_data'] = this.bayes_data;
     r['posts'] = this.posts;
+    r['ratings'] = this.ratings;
     return r;
   },
 
