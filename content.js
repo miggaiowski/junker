@@ -129,7 +129,6 @@ function addToList(node) {
 
 function achaPai(node){
   var bla = $(node).parentsUntil("li").parent().first();
-  console.info(bla);
   return bla;
 }
 

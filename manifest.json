@@ -16,6 +16,8 @@
   "options_page": "options.html",
   "content_scripts": [{
     "matches": ["http://*.facebook.com/*", "https://*.facebook.com/*"],
+	"css": ["style.css"],
+
     "js": ["jquery.min.js", "stopwords_pt-br.js", "tokenizer.js", "backend.js", "parser.js", "content.js"],
     "run_at": "document_end"
   }]
