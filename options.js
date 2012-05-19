@@ -26,8 +26,20 @@ function save_options() {
   userData.show = show;
   stor.saveIdDict(userData);
 
-  chrome.extension.sendRequest({method: "getStatus"}, function(response) {
-  }); //Send the new class 
+/*  chrome.extension.sendRequest({method: "getStatus"}, function(response) {
+
+    if (response!=null){
+      var bl = response.status[0]['blacklist'];
+      var show = response.status[0]['show'];
+      var filterMode = response.status[0]['filterMode'];
+      userData.blacklist = bl;
+      userData.show = show;
+      userData.filterMode = filterMode;
+      stor.saveIdDict(userData);
+      userData = stor.getIdDict('0');
+    }*/
+
+    }); //Send the new class 
 }
 
 // Restores select box state to saved value from localStorage.
