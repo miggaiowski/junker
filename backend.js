@@ -62,6 +62,7 @@ JunkDic.prototype = {
  //Return the Object JSON to store on the Storage.
  getJSON : function(callback){
   var r = {};
+<<<<<<< HEAD
   r[this.id] = {};
   r[this.id]['blacklist'] = this.blacklist;
   r[this.id]['junk_posts'] = this.junk_posts;
@@ -71,6 +72,14 @@ JunkDic.prototype = {
   r[this.id]['filterMode'] = this.filterMode;
   r[this.id]['bayes'] = this.bayes;
   
+=======
+  r['blacklist'] = this.blacklist;
+  r['junk_posts'] = this.junk_posts;
+  r['notjunk_posts'] = this.notjunk_posts;
+  r['id'] = this.id;
+  r['memorySize'] = this.memorySize;
+  r['filterMode'] = this.filterMode; 
+>>>>>>> 36e230a41a353ad8f514a9dc2107d47883b63105
   return r;
  },
 
@@ -129,7 +138,9 @@ Storage.prototype = {
     var aux = JSON.parse(localStorage.perf);
     var result = aux[id];  
     if (result == null){
-      return new JunkDic(id);
+      var nNode = new JunkDic(id);
+      this.saveIdDict(nNode);
+      return nNode;
     }
     else{
       return new JunkDic(id,result);

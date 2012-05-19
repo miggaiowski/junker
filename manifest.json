@@ -16,7 +16,7 @@
   "options_page": "options.html",
   "content_scripts": [{
     "matches": ["http://*.facebook.com/*", "https://*.facebook.com/*"],
-    "js": ["content.js"],
+    "js": ["jquery.min.js", "backend.js", "parser.js", "content.js"],
     "run_at": "document_end"
   }]
 }

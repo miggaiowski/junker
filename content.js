@@ -1,152 +1,127 @@
-document.body.addEventListener("DOMNodeInserted", doit, false);
+document.body.addEventListener("DOMNodeInserted", newElement, false);
 var nodeList = new Array();
 var blackList = getBlackList();
-var deletedNodes;
 
-var globalContainer = $("div[id='globalContainer']")[0];
+var globalContainer = $("#globalContainer").first();
 
-if (localStorage.deletedNodes == null) {
-  deletedNodes = new Array();
-  localStorage.deletedNodes = JSON.stringify(deletedNodes);
-}
-else {
-  deletedNodes = JSON.parse(localStorage.deletedNodes);
+var post_data;
+if (localStorage.post_data == null) {
+  post_data = {
+    posts: {},
+    deleted: {}
+  }
+  
+  localStorage.post_data = JSON.stringify(post_data);
+} else {
+  post_data = JSON.parse(localStorage.post_data);
 }
 
 function getBlackList() {
-  // if (localStorage == null)
-  //   return new Array();
-  // if (localStorage.blackList == null) {
-  //   bl = new Array("whoa", "Brondi");
-  //   localStorage.blackList = JSON.stringify(bl);
-  //   return bl;
-  // }
   var bl = JSON.parse(localStorage.blackList);
   return bl;
 }
 
-function $(selector, rootNode) {
-  var root = rootNode || document;
-  var nodeList = root.querySelectorAll(selector);
-  if (nodeList.length) {
-    return Array.prototype.slice.call(nodeList);
+function newElement(el){
+  var story = $(".uiUnifiedStory").not(".junker_known").first();
+  if(!story.size()) return;
+  
+  // Tag the story as known
+  story.addClass("junker_known");
+  
+  // Get story ID
+  var story_id = getStoryId(story);
+  
+  if(post_data.deleted[story_id]){ 
+    actOnJunk(story);
+    return;
   }
-  return [];
-};
+  
+  // Extract the post's data
+  var post = parsePost(story);  
+  
+  if( inBlacklist(post.text_content) ){
+    setStoryAsJunk(story_id);
+    actOnJunk(story);
+    return;
+  }
 
-function print(stuff) {
-  console.info(stuff);
+  addListenerMenu(story);
+}
+
+function addListenerMenu(node) {
+  var botaoMenu = $("a[class*='highlightSelectorButton uiStreamContextButton']", node).first();
+  if (!botaoMenu) return;
+
+  botaoMenu.data("pai", achaPai(botaoMenu));
+  
+  botaoMenu.click(function (event) {
+    sometimeWhen(existeMenuzinho, mudaMenu, $(this).data("pai"));
+  });
 }
 
 function looseMatch(a, b) {
   return a.toLowerCase().match(b.toLowerCase());
 }
 
-function modifyLike(cloned, pai) {
-  cloned.title = "Marcar como lixo";
-  cloned.name = "set_junk";
-  cloned.setAttribute("class", "as_link");
-  cloned.setAttribute("data-ft", "");
-  cloned.firstChild.innerText = "Junk";
-  cloned.lastChild.innerText = "Unjunk";
-  cloned.pai = pai;
-  cloned.addEventListener("click", function saveToDeletedNodes(event) {
-    alert("Adicionado na categoria Lixo.");
-    markAsJunk(this.pai);
-  });
-  cloned.setAttribute("onclick", "");
-  return cloned;
+function disactOnJunk(node) {
+  node.css("background-color", "#FFFFFF");
 }
 
 function actOnJunk(node) {
-  print(node.innerText);
-  node.style.backgroundColor="#FFCCCC";
-  // node.parentNode.removeChild(node);
+  node.css("background-color", "#FFCCCC");
 }
 
-function markAsJunk(node) {
-  deletedNodes.push({"id": JSON.parse(node.getAttribute("data-ft"))["mf_story_key"], "content": node.innerText});
-  localStorage.deletedNodes = JSON.stringify(deletedNodes);
-  actOnJunk(node);
-}
-
-function makeJunkButton(node) {
-  var like_links = $("span[class*='uiStreamFooter'] button[class*='like_link']", node);  
-  for (var i = 0; i < like_links.length; i++) {
-    var cloned = like_links[i].cloneNode(true);
-    cloned = modifyLike(cloned, node);
-    like_links[i].parentNode.appendChild(cloned);
-    like_links[i].parentNode.appendChild(like_links[i].nextSibling.cloneNode());
+function toggleJunk(node){
+  var story_id = getStoryId(node);
+  
+  if(post_data.deleted[ story_id ]){
+    setStoryRating(story_id, false);
+    disactOnJunk(node);
+    
+    return false;   
+  } else {
+    setStoryRating(story_id, true);
+    actOnJunk(node);
+    
+    return true;
   }
 }
 
-function parse(node) {
-  var node_id = JSON.parse(node.getAttribute("data-ft"))["mf_story_key"];
-  //makeJunkButton(node);
-  for (var deleted in deletedNodes) {
-    if (deletedNodes[deleted]["id"] == node_id) {
-      actOnJunk(node);
-      return;
-    }
-  }
+function setStoryRating(story_id, rating){
+  post_data.deleted[ story_id ] = rating;
+  localStorage.post_data = JSON.stringify(post_data);
+}
+
+function getStoryId(node){
+  var data = node.attr("data-ft");
+  if(!data) return;
+  
+  var node_id = JSON.parse(data)["mf_story_key"];
+  return node_id;
+}
+
+function inBlacklist(text) {
   for (var word in blackList) {
-    if (looseMatch(node.innerText, blackList[word])) {
-      markAsJunk(node);
-      print(blackList[word]);
-    }
+    if (looseMatch(text, blackList[word]))
+      return true;
   }
+  
+  return false;
 }
 
 function addToList(node) {
-  for (var i = 0; i < nodeList.length; i++) {
-    if (nodeList[i].isEqualNode(node))
-      return 0;
-  }
   nodeList.push(node);
 }
 
-function doit() {
-  var story_links = $("li[class*='uiUnifiedStory']");
-  var lastNode = nodeList.length;
-  story_links.forEach(addToList);
-  for (var i = lastNode; i < nodeList.length; i++) {
-    parse(nodeList[i]);
-    addListenerMenu(nodeList[i]);
-  }
-}
-
-function achaPai(node) {
-  if (!node) {
-    console.info("Problema com o nó.");
-    return null;
-  }
-  
-  var pai = node.parentNode;
-  while (pai.tagName != 'LI') {
-    pai = pai.parentNode;
-  }
-  return pai;
-}
-
-function addListenerMenu(node) {
-  var botaoMenu = $("a[class*='highlightSelectorButton uiStreamContextButton']", node)[0];
-  if (!botaoMenu) {
-    console.log("botaoMenu nao encontrado.");
-    return;
-  }
-  var postPai = achaPai(botaoMenu);
-  // var postPai_id = JSON.parse(postPai.getAttribute("data-ft"))["mf_story_key"];
-  // console.info(postPai_id);
-  botaoMenu.pai = postPai;
-  botaoMenu.addEventListener("click", function (event) {
-    sometimeWhen(existeMenuzinho, mudaMenu, this.pai);
-  });
+function achaPai(node){
+  return $(node).parentsUntil("li").parent();
 }
 
 function existeMenuzinho() {
-  var menuzinho = $("div[class='uiContextualLayerPositioner uiLayer']", globalContainer);
-  if (menuzinho.length > 0) {
-    if ($("li[class='uiMenuXItem primaryOption __MenuXItem']", menuzinho[0]).length > 0) {
+  var menuzinho = $(".uiContextualLayer").first();
+  
+  if (menuzinho) {
+    if ( $("li.uiMenuXItem", menuzinho) ) {
       return true;
     }
   }
@@ -168,36 +143,44 @@ function sometimeWhen(existeMenuzinho, mudaMenu, postPai) {
   });
 }
 
-function modifySpamMenuItem(cloned, postPai) {
-  cloned.title = "Marcar como lixo";
-  cloned.name = "set_junk";
-  cloned.setAttribute('id', 'set_junk');
-  cloned.setAttribute("data-ft", "");
-  cloned.firstChild.innerText = "Junk";
-  cloned.firstChild.setAttribute("ajaxify", "");
-  cloned.pai = postPai;
-  cloned.addEventListener("click", function saveToDeletedNodes(event) {
-    markAsJunk(this.pai);
-  });
-  cloned.addEventListener("mouseover", function (event) {
-    this.setAttribute('class', 'uiMenuXItem primaryOption __MenuXItem selected');
-    this.firstChild.setAttribute('class', 'itemAnchor highlighted');
-  });
-  cloned.addEventListener("mouseout", function (event) {
-    this.setAttribute('class', 'uiMenuXItem primaryOption __MenuXItem');
-    this.firstChild.setAttribute('class', 'itemAnchor');
-  });
-  cloned.setAttribute("onclick", "");
-  return cloned;
-}
-
 function mudaMenu(postPai) {
-  var menuzinho = $("div[class='uiContextualLayerPositioner uiLayer']", globalContainer)[0];
-  var menuItem = $("li[class='uiMenuXItem primaryOption __MenuXItem']", menuzinho)[0];
+  var menuzinho = $("div[class='uiContextualLayerPositioner uiLayer']", globalContainer).first();
+  var menuItem = $("li[class='uiMenuXItem primaryOption __MenuXItem']", menuzinho).first();
   var set_junk_itens = $("li[id='set_junk']", menuzinho);
   if (set_junk_itens.length == 0) {
-    var cloned = menuItem.cloneNode(true);
+    var cloned = menuItem.clone(true);
     cloned = modifySpamMenuItem(cloned, postPai);
-    menuItem.parentNode.appendChild(cloned);
+    menuItem.parent().append(cloned);
   }
+}
+
+function modifySpamMenuItem(cloned, postPai) {
+  cloned.name = "set_junk";
+  cloned.attr('id', 'set_junk');
+  cloned.attr("data-ft", "");
+  cloned.children().first().text("Mark as junk");
+  cloned.children().first().attr("ajaxify", "");
+  
+  cloned.click(function (event) {
+    
+    if( toggleJunk(postPai) )
+      $(this).addClass('checked');
+    else
+      $(this).removeClass('checked');
+      
+  });
+  
+  cloned.mouseover(function (event) {
+    $(this).addClass('selected');
+    $(this).children().first().addClass('highlighted');
+  });
+  
+  cloned.mouseout(function (event) {
+    $(this).removeClass("selected");
+    $(this).children().first().removeClass('highlighted');
+  });
+  
+  cloned.attr("onclick", "");
+  
+  return cloned;
 }
