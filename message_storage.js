@@ -1,4 +1,5 @@
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+  console.log(request.method, request.userData);
   if(request.method == "get"){
     
     if(!localStorage.perf)

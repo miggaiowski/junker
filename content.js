@@ -10,8 +10,6 @@ chrome.extension.sendRequest({method: "get"}, function(response){
     userData = new JunkDic('0');
   else
     userData = new JunkDic('0', response.userData);
-
-  stor.saveIdDict(userData);
   
   document.body.addEventListener("DOMNodeInserted", newElement, false);
   $('li.uiUnifiedStory').each(newElement);
@@ -149,7 +147,10 @@ function toggleJunk(node){
 
 function setStoryRating(story_id, rating){
   userData.ratings[ story_id ] = rating;
+  chrome.extension.sendRequest({method: "set", userData: userData.getJSON()});
+  
   stor.saveIdDict(userData);
+  
 }
 
 function getStoryId(node){

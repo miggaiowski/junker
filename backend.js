@@ -107,42 +107,33 @@ JunkDic.prototype = {
 
 
 //=================Storage Main Function ==============
-var  Storage = function () {
-}
+var Storage = function () { }
 
 Storage.prototype = {
-  saveIdDict : function (userDic){
+  saveIdDict : function(userDic){
+    chrome.extension.sendRequest({method: "set", userData: userDic.getJSON()});
+/*    
     if (localStorage.perf == null){   //Don't have any dic
       var a = {};
       var idSon =  userDic.getJSON();
       a[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(a);
-      chrome.extension.sendRequest({method: "set", userData: idSon});
     } else {
       var aux = JSON.parse(localStorage.perf);
       var idSon = userDic.getJSON();
       aux[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(aux);
-      chrome.extension.sendRequest({method: "set", userData: idSon});
     }
-    
+*/    
   },
   
   getIdDict : function (id,callback){
-    if (localStorage.perf == null){
-      var a = {};
-      localStorage.perf = JSON.stringify(a);
-    }
-    var aux = JSON.parse(localStorage.perf);
-    var result = aux[id];  
-    if (result == null){
-      var nNode = new JunkDic(id);
-      this.saveIdDict(nNode);
-      return nNode;
-    }
-    else{
-      return new JunkDic(id,result);
-    }
+    chrome.extension.sendRequest({method: "get"}, function(response){
+      if(!response.userData)
+        callback(new JunkDic('0'))
+      else
+        callback(new JunkDic('0', response.userData) );
+    });
   },
 }
 

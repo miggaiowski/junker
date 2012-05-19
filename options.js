@@ -10,62 +10,47 @@ $('input[name=filterModes]').click(enableSave);
 $('#blacklist').change(enableSave);
 $('input[type=checkbox]').change(enableSave);
 
-// Saves options to localStorage.
 function save_options() {
   var filterMode = $('input[name=filterModes]:radio:checked').val();
-  //console.info(filterMode);
   var blackList = $('#blacklist').val();
-  //console.info(blackList);
   var memorySize = $('input[name=memorySize]:radio:checked').val();
-  //console.info(memorySize);
+
   var stor = new Storage();
-  var userData = stor.getIdDict('0');
-  var bl = blackList.split(',');
-  userData.blacklist = [];
-  for (var word in bl){
-    userData.addToBlacklist(bl[word]);
-  }
-  //userData.setFilterMode(filterMode);
-  //userData.setMemorySize(memorySize);
-  userData.filterMode = filterMode;
-  userData.memorySize = memorySize;
-  //var show = $('input[name=showhidejunk]:checkbox:checked').val();
-  var show = $('input[type=checkbox]').is(':checked');
-  userData.show = show;
-  stor.saveIdDict(userData);
-
-  $("#save_button").attr("disabled", true);
-  $("#save_button").text("Saved");
-
-/*  chrome.extension.sendRequest({method: "getStatus"}, function(response) {
-
-    if (response!=null){
-      var bl = response.status[0]['blacklist'];
-      var show = response.status[0]['show'];
-      var filterMode = response.status[0]['filterMode'];
-      userData.blacklist = bl;
-      userData.show = show;
-      userData.filterMode = filterMode;
-      stor.saveIdDict(userData);
-      userData = stor.getIdDict('0');
+  stor.getIdDict('0', function(userData){
+    var bl = blackList.split(',');
+    userData.blacklist = [];
+    for (var word in bl){
+      userData.addToBlacklist(bl[word]);
     }
 
-    }); //Send the new class 
-    */
+    userData.filterMode = filterMode;
+    userData.memorySize = memorySize;
+
+    var show = $('input[type=checkbox]').is(':checked');
+    userData.show = show;
+    stor.saveIdDict(userData);
+
+    $("#save_button").attr("disabled", true);
+    $("#save_button").text("Saved");
+
+  });
 }
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
   var stor = new Storage(); //new storage and get data
-  var userData = stor.getIdDict('0');
-  $('#blacklist').val(userData.blacklist); 
-  var filterMode = $('#' + userData.filterMode);
-  filterMode.attr('checked', true);
-  var memorySize = $('#memorySize' + userData.memorySize);
-  var show = $('#showJunk');
-  if (userData.show)
+  stor.getIdDict('0', function(userData){
+    $('#blacklist').val(userData.blacklist); 
+    var filterMode = $('#' + userData.filterMode);
+    filterMode.attr('checked', true);
+    var memorySize = $('#memorySize' + userData.memorySize);
+    var show = $('#showJunk');
+    if (userData.show)
     show.attr('checked', true);
-  stor.saveIdDict(userData);
+    stor.saveIdDict(userData);
+
+  });
+
 }
 
 restore_options();
