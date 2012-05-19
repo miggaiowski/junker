@@ -49,8 +49,7 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  console.info(post);
-  if (userData.inBlacklist(post.text_content) || classifier.isSpam(post)){
+  if (userData.inBlacklist(post.raw_text) || classifier.isSpam(post)){
     setStoryRating(story_id, true);
     doTheHide(story);
     return;
@@ -66,8 +65,7 @@ function getUid(){
 }
 
 function doTheHide(node) {
-  // var mostraSpam = userData.showSpam;
-  var mostraSpam = true;
+  var mostraSpam = userData.show;
   if (!mostraSpam) 
     node.hide("slow");
   else {
