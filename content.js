@@ -36,7 +36,7 @@ function newElement(el){
 
   
   if(userData.ratings[story_id]){ 
-    actOnJunk(story);
+    story.hide();
     return;
   }
   
@@ -50,7 +50,7 @@ function newElement(el){
   
   if (userData.inBlacklist(post.text_content)){
     setStoryRating(story_id, true);
-    actOnJunk(story);
+    story.hide("slow");
     return;
   }
 }
@@ -87,9 +87,8 @@ function toggleJunk(node){
     
     return false;   
   } else {
+    node.hide("slow");
     setStoryRating(story_id, true);
-    actOnJunk(node);
-    
     return true;
   }
 }
