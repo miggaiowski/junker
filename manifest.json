@@ -28,7 +28,6 @@
     "matches": ["http://*.facebook.com/*", "https://*.facebook.com/*"],
 	"css": ["style.css"],
     "js": ["./jquery.min.js",
-		   "./jquery.leanModal.min.js",
            "./stopwords_pt-br.js",
            "./tokenizer.js",
            "./underscore.js",

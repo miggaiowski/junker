@@ -138,10 +138,13 @@ function toggleJunk(node){
     
     doTheHide(node);
 
-    $(node).before("<div class='term-offer'><h1>This story has been marked as junk.</h1><p>" + 
-    "<b>Click any of the following terms to add them to the blacklist, or click outside to dismiss this message.</b><br/><br/>" +
-    "<span class='term-click'>" + tokenize(userData.posts[story_id].text_content).sort().join("</span> <span class='term-click'>") +
-    "</span></p></div>");
+    var tokens = tokenize(userData.posts[story_id].text_content);
+    var sugDiv = "<div class='term-offer'><h1>This story has been marked as junk.</h1><p>";
+    if(tokens.length) sugdiv +="<b>Click any of the following terms to add them to the blacklist, or click outside to dismiss this message.</b><br/><br/>" +
+    "<span class='term-click'>" + tokens.sort().join("</span> <span class='term-click'>") + "</span>";
+    sugDiv +="</p></div>";
+    
+    $(node).before(sugDiv);
     
     $(document).mouseup(function(e){
         var container = $(".term-offer");
