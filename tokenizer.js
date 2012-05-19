@@ -3,12 +3,12 @@
 function tokenize(text) {
     var content = text.latinise().toLowerCase().split(/\W+/);
     var filtered_content = new Array();
-    
+
     content.forEach(function(word) {
         if(!stopwords[word] && word.trim().length > 2)
             filtered_content.push(word);
     });
-    
+
     return filtered_content;
 }
 

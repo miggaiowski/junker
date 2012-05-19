@@ -8,9 +8,9 @@ var  JunkDic = function (id,dictionary) {
     this.blacklist = b;
     this.junk_posts = j;
     this.notjunk_posts = n;
-    this.memorySize = "";
-    this.filterMode = "";
-    this.bayes = null;
+    this.memorySize = 50;
+    this.filterMode = "both";
+    this.bayes_data = null;
     this.posts = {};
   }
   else {
@@ -19,7 +19,7 @@ var  JunkDic = function (id,dictionary) {
     this.notjunk_posts = dictionary['notjunk_posts'];
     this.memorySize = dictionary['memorySize'];
     this.filterMode = dictionary['filterMode'];
-    this.bayes = dictionary['bayes'];
+    this.bayes_data = dictionary['bayes_data'];
     this.posts = dictionary['posts'];
   }
 }
@@ -70,7 +70,7 @@ JunkDic.prototype = {
     r['id'] = this.id;
     r['memorySize'] = this.memorySize;
     r['filterMode'] = this.filterMode; 
-    r['bayes'] = this.bayes;
+    r['bayes_data'] = this.bayes_data;
     r['posts'] = this.posts;
     return r;
   },
