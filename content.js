@@ -65,8 +65,7 @@ function getUid(){
 }
 
 function doTheHide(node) {
-  // var mostraSpam = userData.showSpam;
-  var mostraSpam = true;
+  var mostraSpam = userData.show;
   if (!mostraSpam) 
     node.hide("slow");
   else {
