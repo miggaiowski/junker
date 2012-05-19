@@ -25,6 +25,7 @@
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 15px;
+  display: none;
 }
 
 .term-offer h1{
@@ -35,6 +36,17 @@
   cursor: pointer;
   color: #3B5998;
   font-weight: bold;
+}
+
+.undo-junk{
+  cursor: pointer;
+  color: #3B5998;
+  font-weight: bold;
+  text-align:right;
+}
+
+.undo-junk:hover{
+  text-decoration: underline;
 }
 
 .term-click:hover{

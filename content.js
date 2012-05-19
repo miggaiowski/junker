@@ -92,7 +92,7 @@ function getUid(){
 function doTheHide(node) {
   var mostraSpam = userData.show;
   if (!mostraSpam) 
-    node.hide("slow");
+    node.slideUp(500);
   else {
 //    node.css("opacity", 0.5);
     node.fadeTo("slow", 0.3, null);
@@ -138,14 +138,22 @@ function toggleJunk(node){
     
     doTheHide(node);
 
-    var tokens = tokenize(userData.posts[story_id].text_content);
-    var sugDiv = "<div class='term-offer'><h1>This story has been marked as junk.</h1><p>";
+    var post = userData.posts[story_id];
+    var tokens = tokenize(post.text_content);
+    if(post.original_author) tokens.push(post.original_author);
+    if(post.application) tokens.push(post.application);
+    
+    var sugDiv = "<div class='term-offer'><h1>This story has been marked as junk.</h1>";
+    sugDiv += " <span class='undo-junk'>Undo</span><p>";
+    
     if(tokens.length) sugDiv +="<span>Click any of the following terms to add them to the blacklist, or click outside to dismiss this message.</span><br/><br/>" +
     "<span class='term-click'>" + tokens.sort().join("</span> <span class='term-click'>") + "</span>";
-    else sugDiv += "<b>Click outside to dismiss this message.</b>"
+    else sugDiv += "<span>Click outside to dismiss this message.</span>";
     sugDiv +="</p></div>";
-    
-    $(node).before(sugDiv);
+    var sdiv = $(sugDiv);
+    $(node).before(sdiv);
+    sdiv.slideDown(500);
+    //$(node).before(sugDiv).slideDown(500);
     
     $(document).mouseup(function(e){
         var container = $(".term-offer");
@@ -154,12 +162,18 @@ function toggleJunk(node){
             container.slideUp(500);
     });
     
-    $('.term-click').click(function(){
+    $('.term-click', sdiv).click(function(){
       userData.addToBlacklist($(this).text());
       $(this).hide("slow");
       
       chrome.extension.sendRequest({method: "set", userData: userData.getJSON()});
-      stor.saveIdDict(userData);
+      stor.saveIdDict(userData);      
+    });
+    
+    $('.undo-junk', sdiv).click(function(){
+      $(node).slideDown(500);
+      $(sdiv).slideUp(500);
+      setStoryRating(story_id, false);
       
     });
     
