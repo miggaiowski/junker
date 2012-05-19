@@ -12,8 +12,10 @@ chrome.extension.sendRequest({method: "getStatus"}, function(response) {
     //localStorage.perf = JSON.stringify(response.status);
     //console.info(response);
     // userData = stor.getIdDict('0');
-    var resp = response.status[0]['blacklist'];
-    userData.blacklist = resp;
+    var bl = response.status[0]['blacklist'];
+    var show = response.status[0]['show'];
+    userData.blacklist = bl;
+    userData.show = show;
     stor.saveIdDict(userData);
     userData = stor.getIdDict('0');
   }

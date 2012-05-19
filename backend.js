@@ -13,6 +13,7 @@ var  JunkDic = function (id,dictionary) {
     this.bayes = null;
     this.posts = {};
     this.ratings = {};
+    this.show = false;
   }
   else {
     this.blacklist = dictionary['blacklist'];
@@ -23,6 +24,7 @@ var  JunkDic = function (id,dictionary) {
     this.bayes = dictionary['bayes'];
     this.posts = dictionary['posts'];
     this.ratings = dictionary['ratings'];
+    this.show = dictionary['show'];
   }
 }
 
@@ -76,6 +78,7 @@ JunkDic.prototype = {
     r['bayes'] = this.bayes;
     r['posts'] = this.posts;
     r['ratings'] = this.ratings;
+    r['show'] = this.show
     return r;
   },
 
