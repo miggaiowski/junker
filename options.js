@@ -1,6 +1,14 @@
 var botao = document.getElementById("save_button");
 botao.addEventListener('click', save_options);
 
+function enableSave() {
+  $("#save_button").attr("disabled", false);
+  $("#save_button").text("Save");
+}
+
+$('input[name=filterModes]').click(enableSave);
+$('#blacklist').change(enableSave);
+$('input[type=checkbox]').change(enableSave);
 
 // Saves options to localStorage.
 function save_options() {
@@ -25,6 +33,9 @@ function save_options() {
   var show = $('input[type=checkbox]').is(':checked');
   userData.show = show;
   stor.saveIdDict(userData);
+
+  $("#save_button").attr("disabled", true);
+  $("#save_button").text("Saved");
 
 /*  chrome.extension.sendRequest({method: "getStatus"}, function(response) {
 
