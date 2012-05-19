@@ -1,8 +1,10 @@
 document.body.addEventListener("DOMNodeInserted", newElement, false);
 var nodeList = new Array();
-var blackList = getBlackList();
 
 var globalContainer = $("#globalContainer").first();
+
+var stor = new Storage();
+var userData = stor.getIdDict('0');
 
 var post_data;
 if (localStorage.post_data == null) {
@@ -27,9 +29,11 @@ function newElement(el){
   
   // Tag the story as known
   story.addClass("junker_known");
+  addListenerMenu(story);
   
   // Get story ID
   var story_id = getStoryId(story);
+
   
   if(post_data.deleted[story_id]){ 
     actOnJunk(story);
@@ -38,14 +42,15 @@ function newElement(el){
   
   // Extract the post's data
   var post = parsePost(story);  
+
+  userData.posts[story_id] = post;
+  stor.saveIdDict(userData);
   
-  if( inBlacklist(post.text_content) ){
-    setStoryAsJunk(story_id);
+  if (userData.inBlacklist(post.text_content)){
+    setStoryRating(story_id, true);
     actOnJunk(story);
     return;
   }
-
-  addListenerMenu(story);
 }
 
 function addListenerMenu(node) {
@@ -100,15 +105,6 @@ function getStoryId(node){
   return node_id;
 }
 
-function inBlacklist(text) {
-  for (var word in blackList) {
-    if (looseMatch(text, blackList[word]))
-      return true;
-  }
-  
-  return false;
-}
-
 function addToList(node) {
   nodeList.push(node);
 }
@@ -144,6 +140,8 @@ function sometimeWhen(existeMenuzinho, mudaMenu, postPai) {
 }
 
 function mudaMenu(postPai) {
+  var story_id = getStoryId(postPai);
+  
   var menuzinho = $("div[class='uiContextualLayerPositioner uiLayer']", globalContainer).first();
   var menuItem = $("li[class='uiMenuXItem primaryOption __MenuXItem']", menuzinho).first();
   var set_junk_itens = $("li[id='set_junk']", menuzinho);
@@ -151,6 +149,8 @@ function mudaMenu(postPai) {
     var cloned = menuItem.clone(true);
     cloned = modifySpamMenuItem(cloned, postPai);
     menuItem.parent().append(cloned);
+    if (post_data.deleted[story_id])
+      $(cloned).addClass('checked');
   }
 }
 
@@ -158,7 +158,7 @@ function modifySpamMenuItem(cloned, postPai) {
   cloned.name = "set_junk";
   cloned.attr('id', 'set_junk');
   cloned.attr("data-ft", "");
-  cloned.children().first().text("Mark as junk");
+  cloned.children().first().text("Junk");
   cloned.children().first().attr("ajaxify", "");
   
   cloned.click(function (event) {
@@ -167,7 +167,7 @@ function modifySpamMenuItem(cloned, postPai) {
       $(this).addClass('checked');
     else
       $(this).removeClass('checked');
-      
+    
   });
   
   cloned.mouseover(function (event) {

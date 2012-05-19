@@ -39,6 +39,6 @@ function parsePost(story){
   if(!post.story_id || !post.author_id || !post.author_name)
     return null;
   
-  console.log(post);
+  // console.log(post);
   return post;
 }

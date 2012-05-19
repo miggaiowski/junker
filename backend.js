@@ -1,27 +1,26 @@
-//document.body.addEventListener('DOMNodeInserted', doit, false);
-
-///Junk Dictionary Class
+// Junk Dictionary Class
 var  JunkDic = function (id,dictionary) {
   this.id = id;
   if (dictionary == null){
-     var b = new Array();
-     var j = new Array();
-     var n = new Array();
-     this.blacklist = b;
-     this.junk_posts = j;
-     this.notjunk_posts = n;
-     this.memorySize = "";
-     this.filterMode = "";
-     this.bayes = null;
+    var b = new Array();
+    var j = new Array();
+    var n = new Array();
+    this.blacklist = b;
+    this.junk_posts = j;
+    this.notjunk_posts = n;
+    this.memorySize = "";
+    this.filterMode = "";
+    this.bayes = null;
+    this.posts = {};
   }
-  else{
-
+  else {
     this.blacklist = dictionary['blacklist'];
     this.junk_posts = dictionary['junk_posts'];
     this.notjunk_posts = dictionary['notjunk_posts'];
     this.memorySize = dictionary['memorySize'];
     this.filterMode = dictionary['filterMode'];
     this.bayes = dictionary['bayes'];
+    this.posts = dictionary['posts'];
   }
 }
 
@@ -30,79 +29,72 @@ JunkDic.prototype = {
   testBlacklist: function (callback){
     print(this.blacklist);
   },
- //is in the blacklist??
- //Idea: return a JSON with {'word':1.0,'word2':0.9} Jaccard Similarities
- //words: Array of words,
- //Behavior: Return true in the first ocurrency of a word in the blacklist
- inBlacklist: function (words,callback){
-    //print (words);
-    for (var word in words){
-        //print("Running " + word);
-        if (words[word] in this.blacklist){
+  //is in the blacklist??
+  //Idea: return a JSON with {'word':1.0,'word2':0.9} Jaccard Similarities
+  //words: Array of words,
+  //Behavior: Return true in the first ocurrency of a word in the blacklist
+  inBlacklist: function (content,callback){
+    // var tokens = tokenize(content);
+    var tokens = content.toLowerCase().split(" ");
+    for (var word in tokens){
+      //print("Running " + word);
+      for (var bl in this.blacklist) {
+        if (tokens[word] == this.blacklist[bl]){
           return true;
         }
       }
+    }
     return false;
   },
 
- //Push a word to the blacklist;
- //Return true if the word successfull inserted
- //False in case of word was already in the blacklist
- addToBlacklist: function(word,callback){
-  //print("Comparing the word " + word + " with " + this.blacklist);
-  for (var w in this.blacklist){
-    if (word == this.blacklist[w]){
-     return false;
+  //Push a word to the blacklist;
+  //Return true if the word successfull inserted
+  //False in case of word was already in the blacklist
+  addToBlacklist: function(word,callback){
+    //print("Comparing the word " + word + " with " + this.blacklist);
+    for (var w in this.blacklist){
+      if (word == this.blacklist[w]){
+        return false;
+      }
     }
-  }
-  this.blacklist.push(word);
-  return true;
- },
+    this.blacklist.push(word);
+    return true;
+  },
 
- //Return the Object JSON to store on the Storage.
- getJSON : function(callback){
-  var r = {};
-<<<<<<< HEAD
-  r[this.id] = {};
-  r[this.id]['blacklist'] = this.blacklist;
-  r[this.id]['junk_posts'] = this.junk_posts;
-  r[this.id]['notjunk_posts'] = this.notjunk_posts;
-  r[this.id]['id'] = this.id;
-  r[this.id]['memorySize'] = this.memorySize;
-  r[this.id]['filterMode'] = this.filterMode;
-  r[this.id]['bayes'] = this.bayes;
-  
-=======
-  r['blacklist'] = this.blacklist;
-  r['junk_posts'] = this.junk_posts;
-  r['notjunk_posts'] = this.notjunk_posts;
-  r['id'] = this.id;
-  r['memorySize'] = this.memorySize;
-  r['filterMode'] = this.filterMode; 
->>>>>>> 36e230a41a353ad8f514a9dc2107d47883b63105
-  return r;
- },
+  //Return the Object JSON to store on the Storage.
+  getJSON : function(callback){
+    var r = {};
+    r['blacklist'] = this.blacklist;
+    r['junk_posts'] = this.junk_posts;
+    r['notjunk_posts'] = this.notjunk_posts;
+    r['id'] = this.id;
+    r['memorySize'] = this.memorySize;
+    r['filterMode'] = this.filterMode; 
+    r['bayes'] = this.bayes;
+    r['posts'] = this.posts;
+    return r;
+  },
 
-//  getBlacklist: function(callback) {
-//      return this.blacklist;
-//  },
-// 
-// 
-//  getJunkPosts: function(callback) {
-//      return this.junk_posts;
-//  },
-// 
-// 
-//  getBlacklist: function(callback) {
-//      return this.blacklist;
-//  },
+  //  getBlacklist: function(callback) {
+  //      return this.blacklist;
+  //  },
+  // 
+  // 
+  //  getJunkPosts: function(callback) {
+  //      return this.junk_posts;
+  //  },
+  // 
+  // 
+  //  getBlacklist: function(callback) {
+  //      return this.blacklist;
+  //  },
 
 
-   //  this.blacklist = dictionary['blacklist'];
-   //  this.junk_posts = dictionary['junk_posts'];
-   //  this.notjunk_posts = dictionary['notjunk_posts'];
-   //  this.memorySize = dictionary['memorySize'];
-   //  this.filterMode = dictionary['filterMode'];
+  //  this.blacklist = dictionary['blacklist'];
+  //  this.junk_posts = dictionary['junk_posts'];
+  //  this.notjunk_posts = dictionary['notjunk_posts'];
+  //  this.memorySize = dictionary['memorySize'];
+  //  this.filterMode = dictionary['filterMode'];
 
 }
 
@@ -115,20 +107,20 @@ var  Storage = function () {
 
 Storage.prototype = {
   saveIdDict : function (userDic){
-   if (localStorage.perf == null){   //Don't have any dic
+    if (localStorage.perf == null){   //Don't have any dic
       var a = {};
       var idSon =  userDic.getJSON();
       a[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(a);
-   } 
-   else{
-    var aux = JSON.parse(localStorage.perf);
-    //var result = this.drill(id,aux) 
-    var idSon = userDic.getJSON();
-    aux[idSon['id']] = idSon;
-    localStorage.perf = JSON.stringify(aux);
-   }
-  
+    } 
+    else{
+      var aux = JSON.parse(localStorage.perf);
+      //var result = this.drill(id,aux) 
+      var idSon = userDic.getJSON();
+      aux[idSon['id']] = idSon;
+      localStorage.perf = JSON.stringify(aux);
+    }
+    
   },
   getIdDict : function (id,callback){
     if (localStorage.perf == null){
