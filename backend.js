@@ -1,3 +1,5 @@
+//document.body.addEventListener('DOMNodeInserted', doit, false);
+
 ///Junk Dictionary Class
 var  JunkDic = function (id,dictionary) {
   this.id = id;
@@ -139,11 +141,13 @@ Storage.prototype = {
 //USAGE
 
 
+//function doit(){
+//var sto = new Storage();
+//var userDict = sto.getIdDict('00001');
+//userDict.addToBlacklist('merdinha');
+//userDict.addToBlacklist('bostinha')
+//
+//console.info(userDict.blacklist);
+//}
 
-var sto = new Storage();
-var userDict = sto.getIdDict('00001');
-userDict.addToBlacklist('merdinha');
-userDict.addToBlacklist('bostinha')
-
-print(usedDict.blacklist);
-
+//doit();
