@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>My Test Extension Options</title>
+    <title>Junker Options</title>
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
   </head>
   <body>
@@ -9,15 +9,15 @@
         <label class="control-label">Filter Mode</label>
         <div class="controls">
           <label class="radio">
-            <input type="radio" name="filterModes" id="filterModes1" value="bl_only" checked>
-            Blacklist Only
-          </label>
-          <label class="radio">
-            <input type="radio" name="filterModes" id="filterModes2" value="bayes" unchecked>
-            Intelligent Mode
-          </label>
-          <label class="radio">
-            <input type="radio" name="filterModes" id="filterModes3" value="both" unchecked>
+            <input type="radio" name="filterModes" id="bl_only" value="bl_only" >
+            Blacklist Only                                     
+          </label>                                             
+          <label class="radio">                                
+            <input type="radio" name="filterModes" id="bayes"   value="bayes"   >
+            Intelligent Mode                                   
+          </label>                                             
+          <label class="radio">                                
+            <input type="radio" name="filterModes" id="both"    value="both"    >
             Full Power
           </label>
         </div>
@@ -26,7 +26,6 @@
     <div id="bl_div">
       <label for="blacklist">Blacklick</label>
       <textarea id="blacklist" class="input-xlarge" rows="5" cols="100" ></textarea>
-      <!-- <input id="blacklist" class="span3" type="textarea" placeholder="List of prohibited..." style="width: 300px"> -->
     </div>
     <div id="bl_div">
       <div class="control-group">
@@ -50,8 +49,8 @@
     <button id="save_button">Save</button>
     <div id="status"></div>
 
-    <script type="text/javascript" src="options.js"></script>
     <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="options.js"></script>
   </body>
 </html>
 

@@ -1,6 +1,3 @@
-// restore_options();
-
-
 var botao = document.getElementById("save_button");
 botao.addEventListener('click', save_options);
 
@@ -12,9 +9,22 @@ function save_options() {
   console.info(blackList);
   var memorySize = $('input[name=memorySize]:radio:checked').val();
   console.info(memorySize);
+  var userData = {
+    'filterMode': filterMode,
+    'blackList': blackList,
+    'memorySize': memorySize
+  };
+  localStorage['junker'] = JSON.stringify({'0': userData});
 }
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-  return;
+  var userData = JSON.parse(localStorage['junker'])['0'];
+  var blackList = $('#blacklist').val(userData['blackList']);
+  var filterMode = $('#' + userData['filterMode']);
+  filterMode.attr('checked', true);
+  console.info(filterMode);
 }
+
+restore_options();
+
