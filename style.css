@@ -20,13 +20,23 @@
 }
 
 .term-offer{
-  background-color: #F0F0F0;
+  background-color: #EDEFF4;
+  border: 1px solid #D8DFEA;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.term-offer h1{
+  color: #3B5998;
 }
 
 .term-click{
   cursor: pointer;
+  color: #3B5998;
+  font-weight: bold;
 }
 
 .term-click:hover{
-  color: #0000FF;
+  text-decoration: underline;
 }
