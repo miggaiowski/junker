@@ -1,19 +1,25 @@
 document.body.addEventListener("DOMNodeInserted", newElement, false);
 
 chrome.extension.sendRequest({method: "getStatus"}, function(response) {
+  //var stor = new Storage();
   if (response!=null){
-   localStorage.perf = response.status; 
+   //localStorage.perf = JSON.stringify(response.status);
+   //console.info(response);
+   userData = stor.getIdDict('0');
+   var resp = response.status[0]['blacklist'];
+   userData.blacklist = resp;
+   stor.saveIdDict(userData);
+   //stor.saveIdDict(user);
   }
-  
+
+
 });
 
+var stor = new Storage();
+var userData = stor.getIdDict('0');
 var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
-
-var stor = new Storage();
-//console.info(localStorage.perf);
-var userData = stor.getIdDict('0');
 
 // var post_data;
 // if (localStorage.post_data == null) {
@@ -56,7 +62,7 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  
+  //console.info(post); 
   if (userData.inBlacklist(post.text_content)){
     setStoryRating(story_id, true);
     story.hide("slow");
