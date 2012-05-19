@@ -11,8 +11,9 @@ function save_options() {
   console.info(memorySize);
   var stor = new Storage();
   var userData = stor.getIdDict('0');
-  for (var word in blacklist){
-    userData.addToBlacklist(blacklist[word]);
+  var bl = blackList.split(',');
+  for (var word in bl){
+    userData.addToBlacklist(bl[word]);
   }
   //userData.setFilterMode(filterMode);
   //userData.setMemorySize(memorySize);
@@ -25,10 +26,12 @@ function save_options() {
 function restore_options() {
   var stor = new Storage();
   var userData = stor.getIdDict('0');
+  console.info(userData);
   //var blackList = userData.blacklist;
-  $('#blacklist').val(userData.blackList);
+  $('#blacklist').val(userData.blacklist);
   var filterMode = $('#' + userData.filterMode);
   filterMode.attr('checked', true);
+  stor.saveIdDict(userData);
   console.info(filterMode);
 }
 
