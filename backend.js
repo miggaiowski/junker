@@ -1,7 +1,4 @@
 
-//REMOVE AFTER BRANCH
-document.body.addEventListener("DOMNodeInserted", doit, false);
-//////
 
 
 
@@ -75,10 +72,8 @@ JunkDic.prototype = {
 
 
 //=================Storage Main Function ==============
-var  Storage = function (teste) {
-  this.teste = teste
+var  Storage = function () {
 }
-
 
 Storage.prototype = {
   saveIdDict : function (userDic){
@@ -115,16 +110,13 @@ Storage.prototype = {
 
 //=========================
 
-function doit(){
+
+//USAGE
 
 
-var sto = new Storage('mystorage');
-var userDict = sto.getIdDict('00001');
-console.info(userDict);
+
+//var sto = new Storage();
+//var userDict = sto.getIdDict('00001');
 //userDict.addToBlacklist('merdinha');
 //userDict.addToBlacklist('bostinha')
-sto.saveIdDict(userDict);
 
-}
-
-doit();
