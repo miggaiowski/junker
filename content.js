@@ -12,25 +12,8 @@ var nodeList = new Array();
 var globalContainer = $("#globalContainer").first();
 
 var stor = new Storage();
-//console.info(localStorage.perf);
 var userData = stor.getIdDict('0');
 
-// var post_data;
-// if (localStorage.post_data == null) {
-//   post_data = {
-//     posts: {},
-//     deleted: {}
-//   }
-  
-//   localStorage.post_data = JSON.stringify(post_data);
-// } else {
-//   post_data = JSON.parse(localStorage.post_data);
-// }
-
-function getBlackList() {
-  var bl = JSON.parse(localStorage.blackList);
-  return bl;
-}
 
 function newElement(el){
   var story = $(".uiUnifiedStory").not(".junker_known").first();
@@ -42,7 +25,6 @@ function newElement(el){
   
   // Get story ID
   var story_id = getStoryId(story);
-
   
   if(userData.ratings[story_id]){ 
     doTheHide(story);
@@ -53,6 +35,9 @@ function newElement(el){
   var post = parsePost(story);  
   if (!post)
     return;
+    
+  if(post.author_id == getUid())
+    return;
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
@@ -62,6 +47,10 @@ function newElement(el){
     doTheHide(story);
     return;
   }
+}
+
+function getUid(){
+  return $('.uiMorePagerPrimary[ajaxify*="notifications"]').attr("ajaxify").match(/[0-9]+/)[0];
 }
 
 function doTheHide(node) {
