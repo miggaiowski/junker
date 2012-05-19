@@ -41,7 +41,7 @@ JunkDic.prototype = {
     for (var word in tokens){
       //print("Running " + word);
       for (var bl in this.blacklist) {
-        //console.info("Comparing token: " + tokens[word] + " with "+ this.blacklist[bl]);
+        // console.info("Comparing token: " + tokens[word] + " with "+ this.blacklist[bl]);
         if (tokens[word] == this.blacklist[bl]){
           return true;
         }

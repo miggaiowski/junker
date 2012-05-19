@@ -1,42 +1,23 @@
 document.body.addEventListener("DOMNodeInserted", newElement, false);
 
-chrome.extension.sendRequest({method: "getStatus"}, function(response) {
-  //var stor = new Storage();
-  if (response!=null){
-   //localStorage.perf = JSON.stringify(response.status);
-   //console.info(response);
-   userData = stor.getIdDict('0');
-   var resp = response.status[0]['blacklist'];
-   userData.blacklist = resp;
-   stor.saveIdDict(userData);
-   //stor.saveIdDict(user);
-  }
-
-
-});
-
 var stor = new Storage();
 var userData = stor.getIdDict('0');
 var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
 
-// var post_data;
-// if (localStorage.post_data == null) {
-//   post_data = {
-//     posts: {},
-//     deleted: {}
-//   }
-  
-//   localStorage.post_data = JSON.stringify(post_data);
-// } else {
-//   post_data = JSON.parse(localStorage.post_data);
-// }
-
-function getBlackList() {
-  var bl = JSON.parse(localStorage.blackList);
-  return bl;
-}
+chrome.extension.sendRequest({method: "getStatus"}, function(response) {
+  //var stor = new Storage();
+  if (response!=null){
+    //localStorage.perf = JSON.stringify(response.status);
+    //console.info(response);
+    // userData = stor.getIdDict('0');
+    var resp = response.status[0]['blacklist'];
+    userData.blacklist = resp;
+    stor.saveIdDict(userData);
+    userData = stor.getIdDict('0');
+  }
+});
 
 function newElement(el){
   var story = $(".uiUnifiedStory").not(".junker_known").first();
@@ -48,7 +29,6 @@ function newElement(el){
   
   // Get story ID
   var story_id = getStoryId(story);
-
   
   if(userData.ratings[story_id]){ 
     doTheHide(story);
@@ -62,7 +42,6 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  //console.info(post); 
   if (userData.inBlacklist(post.text_content)){
     setStoryRating(story_id, true);
     doTheHide(story);
@@ -72,9 +51,9 @@ function newElement(el){
 
 function doTheHide(node) {
   // var mostraSpam = userData.showSpam;
-  var mostraSpam = true;
+  var mostraSpam = null;
   if (!mostraSpam) 
-    node.hide();
+    node.hide("slow");
   else {
     // node.css("opacity", 0.5);
     node.fadeTo("slow", 0.3, null);
@@ -150,7 +129,7 @@ function existeMenuzinho() {
 }
 
 function async(fn) {
-  setTimeout(fn, 200);
+  setTimeout(fn, 300);
 }
 
 function sometimeWhen(existeMenuzinho, mudaMenu, postPai) {
