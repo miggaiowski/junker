@@ -1,0 +1,22 @@
+{
+  "name": "Junker",
+  "version": "0.1",
+  "manifest_version": 2,
+  "description":
+    "Clean up FB feed.",
+  "permissions": [
+    "contextMenus",
+    "cookies",
+    "idle",
+    "notifications",
+    "unlimitedStorage",
+    "http://*.facebook.com/*",
+    "https://*.facebook.com/*"
+  ],
+  "options_page": "options.html",
+  "content_scripts": [{
+    "matches": ["http://*.facebook.com/*", "https://*.facebook.com/*"],
+    "js": ["content.js"],
+    "run_at": "document_end"
+  }]
+}

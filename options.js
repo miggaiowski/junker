@@ -9,19 +9,25 @@ function save_options() {
   console.info(blackList);
   var memorySize = $('input[name=memorySize]:radio:checked').val();
   console.info(memorySize);
-  var userData = {
-    'filterMode': filterMode,
-    'blackList': blackList,
-    'memorySize': memorySize
-  };
-  localStorage['junker'] = JSON.stringify({'0': userData});
+  var stor = new Storage();
+  var userData = stor.getIdDict('0');
+  for (var word in blacklist){
+    userData.addToBlacklist(blacklist[word]);
+  }
+  //userData.setFilterMode(filterMode);
+  //userData.setMemorySize(memorySize);
+  userData.filterMode = filterMode;
+  userData.memorySize = memorySize;
+  stor.saveIdDict(userData);
 }
 
 // Restores select box state to saved value from localStorage.
 function restore_options() {
-  var userData = JSON.parse(localStorage['junker'])['0'];
-  var blackList = $('#blacklist').val(userData['blackList']);
-  var filterMode = $('#' + userData['filterMode']);
+  var stor = new Storage();
+  var userData = stor.getIdDict('0');
+  //var blackList = userData.blacklist;
+  $('#blacklist').val(userData.blackList);
+  var filterMode = $('#' + userData.filterMode);
   filterMode.attr('checked', true);
   console.info(filterMode);
 }

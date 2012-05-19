@@ -9,15 +9,15 @@
         <label class="control-label">Filter Mode</label>
         <div class="controls">
           <label class="radio">
-            <input type="radio" name="filterModes" id="bl_only" value="bl_only" >
+            <input type="radio" name="filterModes" id="bl_only" value="bl_only" checked>
             Blacklist Only                                     
           </label>                                             
           <label class="radio">                                
-            <input type="radio" name="filterModes" id="bayes"   value="bayes"   >
+            <input type="radio" name="filterModes" id="bayes"   value="bayes"    unchecked>
             Intelligent Mode                                   
           </label>                                             
           <label class="radio">                                
-            <input type="radio" name="filterModes" id="both"    value="both"    >
+            <input type="radio" name="filterModes" id="both"    value="both"    unchecked>
             Full Power
           </label>
         </div>
@@ -50,6 +50,7 @@
     <div id="status"></div>
 
     <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="backend.js"></script>
     <script type="text/javascript" src="options.js"></script>
   </body>
 </html>
