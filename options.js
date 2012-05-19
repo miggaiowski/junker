@@ -31,6 +31,9 @@ function restore_options() {
   $('#blacklist').val(userData.blacklist);
   var filterMode = $('#' + userData.filterMode);
   filterMode.attr('checked', true);
+  var memorySize = $('#memorySize' + userData.memorySize);
+  console.info(memorySize);
+  memorySize.attr('checked', true);
   stor.saveIdDict(userData);
   console.info(filterMode);
 }
