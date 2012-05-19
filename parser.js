@@ -66,6 +66,5 @@ function parsePost(story){
   if(!post.story_id || !post.author_id || !post.author_name || !post.text_content.toLowerCase)
     return null;
   
-  console.log(post);
   return post;
 }
