@@ -23,16 +23,41 @@ Classifier.prototype = {
     // post: a parsed post
     // type: "junk" or "notjunk"
     trainWith: function(post, type, callback) {
+        if(type == "junk") {
+            var index;
+            for(index = 0; index < this.userData.notjunk_posts.length; index++)
+                if(this.userData.notjunk_posts[index]["story_id"] == post.story_id)
+                    break;
+
+            // Pop from notjunk and retrain
+            if(index < this.userData.notjunk_posts.length) {
+                this.userData.junk_posts.push(this.userData.notjunk_posts.splice(index, 1)[0]);
+
+                this.initBayes();
+
+                for(var i = 0; i < this.userData.junk_posts.length; i++)
+                    this.bayes.train(this.userData.junk_posts[i].content, "junk");
+
+                for(var i = 0; i < this.userData.notjunk_posts.length; i++)
+                    this.bayes.train(this.userData.notjunk_posts[i].content, "notjunk");
+
+                this.saveBayes();
+                return;
+            }
+        }
+
         var text = tokenize(post.author_name).concat(tokenize(post.text_content));
         this.bayes.train(text, type);
 
-        if(type == "junk")
-            this.userData.junk_posts.push(text);
-        else
-            this.userData.notjunk_posts.push(text);
+        var parsed_post = {story_id : post.story_id,
+                           content : text};
 
-        this.userData.bayes_data = this.bayes.toJSON();
-        this.storage.saveIdDict(this.userData);
+        if(type == "junk")
+            this.userData.junk_posts.push(parsed_post);
+        else
+            this.userData.notjunk_posts.push(parsed_post);
+
+        this.saveBayes();
     },
 
     initBayes: function() {
@@ -42,6 +67,11 @@ Classifier.prototype = {
                 notjunk: 1
             }
         });
+    },
+
+    saveBayes: function() {
+        this.userData.bayes_data = this.bayes.toJSON();
+        this.storage.saveIdDict(this.userData);
     }
 }
 
