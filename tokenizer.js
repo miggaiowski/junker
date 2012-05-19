@@ -4,7 +4,13 @@ function tokenize(text) {
     var content = text.latinise().toLowerCase().split(/\W+/);
     var filtered_content = new Array();
 
+//    var stemmer = new Snowball("portuguese")
+//    stemmer.setCurrent(word);
+//    stemmer.stem();
+//    word = stemmer.getCurrent();
+
     content.forEach(function(word) {
+
         if(!stopwords[word] && word.trim().length > 2)
             filtered_content.push(word);
     });
