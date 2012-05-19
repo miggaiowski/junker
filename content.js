@@ -6,7 +6,7 @@ var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
 
-//var classifier = new Classifier();
+var classifier = new Classifier();
 
 /*
 chrome.extension.sendRequest({method: "getStatus"}, function(response) {
@@ -51,13 +51,14 @@ function newElement(el) {
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
 
-  if (userData.inBlacklist(post.raw_text)/* || classifier.isSpam(post)*/){
+  //if (userData.inBlacklist(post.raw_text) || classifier.isSpam(post)){
+  if (classifier.isSpam(post)){
     setStoryRating(story_id, true);
     doTheHide(story);
     return;
   } else {
-    //if (Math.random() > 0.5)
-    //  classifier.trainWith(post, "notjunk");
+    if (Math.random() > 0.75)
+      classifier.trainWith(post, "notjunk");
   }
 /*
   if (userData.filterMode == "bl_only") {
@@ -103,9 +104,9 @@ function doTheHide(node) {
   if (!mostraSpam) 
     node.hide("slow");
   else {
-    // node.css("opacity", 0.5);
-    node.fadeTo("slow", 0.3, null);
-    node.addClass("faded");
+    node.css("opacity", 0.5);
+//    node.fadeTo("slow", 0.3, null);
+//    node.addClass("faded");
   }
 }
 
@@ -135,21 +136,21 @@ function toggleJunk(node){
   if(userData.ratings[ story_id ]){
     setStoryRating(story_id, false);
     if (userData.filterMode == "both" || userData.filterMode == "bayes") {
-//      classifier.trainWith(userData.posts[story_id], "notjunk");
-//      classifier.trainWith(userData.posts[story_id], "notjunk");
+      classifier.trainWith(userData.posts[story_id], "notjunk");
+      classifier.trainWith(userData.posts[story_id], "notjunk");
     }
     doTheShow(node);
     
     return false;   
   } else {
     setStoryRating(story_id, true);
-  //  classifier.trainWith(userData.posts[story_id], "junk");
+    classifier.trainWith(userData.posts[story_id], "junk");
     
     doTheHide(node);
-/*
+
     if (userData.filterMode == "both" || userData.filterMode == "bayes")
       classifier.trainWith(userData.posts[story_id], "junk");
-*/
+
     return true;
   }
 }

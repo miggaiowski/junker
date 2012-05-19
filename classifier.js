@@ -1,15 +1,18 @@
-// Classifier!!!
 var Classifier = function () {
     this.initBayes();
 
-    this.storage = new Storage();
+    if(localStorage["bayes_data"] != null)
+        this.bayes.fromJSON(localStorage["bayes_data"]);
 
-    // TODO: change this to real user ID.
-    this.userData = this.storage.getIdDict('0');
+    if(localStorage["junk_posts"] != null)
+        this.junk_posts = JSON.parse(localStorage["junk_posts"]);
+    else
+        this.junk_posts = new Array();
 
-    if(this.userData.bayes_data != null) {
-        this.bayes.fromJSON(this.userData.bayes_data);
-    }
+    if(localStorage["notjunk_posts"] != null)
+        this.notjunk_posts = JSON.parse(localStorage["notjunk_posts"]);
+    else
+        this.notjunk_posts = new Array();
 }
 
 Classifier.prototype = {
@@ -25,23 +28,23 @@ Classifier.prototype = {
     trainWith: function(post, type, callback) {
         if(type == "junk") {
             var index;
-            for(index = 0; index < this.userData.notjunk_posts.length; index++)
-                if(this.userData.notjunk_posts[index]["story_id"] == post.story_id)
+            for(index = 0; index < this.notjunk_posts.length; index++)
+                if(this.notjunk_posts[index]["story_id"] == post.story_id)
                     break;
 
             // Pop from notjunk and retrain
-            if(index < this.userData.notjunk_posts.length) {
-                this.userData.junk_posts.push(this.userData.notjunk_posts.splice(index, 1)[0]);
+            if(index < this.notjunk_posts.length) {
+                this.junk_posts.push(this.notjunk_posts.splice(index, 1)[0]);
 
                 this.initBayes();
 
-                for(var i = 0; i < this.userData.junk_posts.length; i++)
-                    this.bayes.train(this.userData.junk_posts[i].content, "junk");
+                for(var i = 0; i < this.junk_posts.length; i++)
+                    this.bayes.train(this.junk_posts[i].content, "junk");
 
-                for(var i = 0; i < this.userData.notjunk_posts.length; i++)
-                    this.bayes.train(this.userData.notjunk_posts[i].content, "notjunk");
+                for(var i = 0; i < this.notjunk_posts.length; i++)
+                    this.bayes.train(this.notjunk_posts[i].content, "notjunk");
 
-                this.saveBayes();
+                this.saveData();
                 return;
             }
         }
@@ -53,52 +56,25 @@ Classifier.prototype = {
                            content : text};
 
         if(type == "junk")
-            this.userData.junk_posts.push(parsed_post);
+            this.junk_posts.push(parsed_post);
         else
-            this.userData.notjunk_posts.push(parsed_post);
+            this.notjunk_posts.push(parsed_post);
 
-        this.saveBayes();
+        this.saveData();
     },
 
     initBayes: function() {
         this.bayes = new Bayesian({
-            thresholds:{
+            thresholds: {
                 junk: 3,
                 notjunk: 1
             }
         });
     },
 
-    saveBayes: function() {
-        this.userData.bayes_data = this.bayes.toJSON();
-        this.storage.saveIdDict(this.userData);
+    saveData: function() {
+        localStorage.bayes_data  = this.bayes.toJSON();
+        localStorage.junk_posts  = JSON.stringify(this.junk_posts);
+        localStorage.notjunk_posts  = JSON.stringify(this.notjunk_posts);
     }
 }
-
-
-//        var retrain = false;
-//
-//        if(type == "junk") {
-//            if(this.userData.junk_posts.length == this.userData.memorySize) {
-//                console.info(this.userData.junk_posts);
-//                this.userData.junk_posts.shift();
-//                console.info(this.userData.junk_posts);
-//                retrain = true;
-//            }
-//        }
-//        else {
-//            if(this.userData.notjunk_posts.length == this.userData.memorySize) {
-//                this.userData.notjunk_posts.shift();
-//                retrain = true;
-//            }
-//        }
-//
-//        if(retrain) {
-//            this.initBayes();
-//
-//            for(var i = 0; i < this.userData.junk_posts.length; i++)
-//                this.bayes.train(this.userData.junk_posts[i], "junk");
-//
-//            for(var i = 0; i < this.userData.notjunk_posts.length; i++)
-//                this.bayes.train(this.userData.notjunk_posts[i], "notjunk");
-//        }
