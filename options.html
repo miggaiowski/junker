@@ -1,64 +1,57 @@
 <html>
-<head><title>My Test Extension Options</title></head>
-<script type="text/javascript">
-// Saves options to localStorage.
-function save_options() {
-  var select = document.getElementById("color");
-  var color = select.children[select.selectedIndex].value;
-  localStorage["favorite_color"] = color;
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
-}
+  <head>
+    <title>My Test Extension Options</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+  </head>
+  <body>
+    <div id="mode_div">
+      <div class="control-group">
+        <label class="control-label">Filter Mode</label>
+        <div class="controls">
+          <label class="radio">
+            <input type="radio" name="filterModes" id="filterModes1" value="bl_only" checked>
+            Blacklist Only
+          </label>
+          <label class="radio">
+            <input type="radio" name="filterModes" id="filterModes2" value="bayes" unchecked>
+            Intelligent Mode
+          </label>
+          <label class="radio">
+            <input type="radio" name="filterModes" id="filterModes3" value="both" unchecked>
+            Full Power
+          </label>
+        </div>
+      </div>
+    </div>
+    <div id="bl_div">
+      <label for="blacklist">Blacklick</label>
+      <textarea id="blacklist" class="input-xlarge" rows="5" cols="100" ></textarea>
+      <!-- <input id="blacklist" class="span3" type="textarea" placeholder="List of prohibited..." style="width: 300px"> -->
+    </div>
+    <div id="bl_div">
+      <div class="control-group">
+        <label class="control-label">Memory Size</label>
+        <div class="controls">
+          <label class="radio">
+            <input type="radio" name="memorySize" id="memorySize1" value="10" unchecked>
+            10
+          </label>
+          <label class="radio">
+            <input type="radio" name="memorySize" id="memorySize2" value="25" checked>
+            25
+          </label>
+          <label class="radio">
+            <input type="radio" name="memorySize" id="memorySize3" value="50" unchecked>
+            50
+          </label>
+        </div>
+      </div>
+    </div>
+    <button id="save_button">Save</button>
+    <div id="status"></div>
 
-// Restores options from localstorage 
-function restore_options() {
-  var junker = localStorage["junker"];
-  
-  if (!junker) {
-    return;
-  }
-
-  // Restore mode 
-  var mode = document.getElementById("mode");
-  
-  for (var i = 0; i < select.children.length; i++) {
-    var child = select.children[i];
-    if (child.value == favorite) {
-      child.selected = "true";
-      break;
-    }
-  }
-
-
-}
-</script>
-<body onload="restore_options()">
-  <div id="mode_div">
-    <label>Filter Mode</label>
-    <select id="mode">
-       <option value="blacklist">Blacklist only</option>
-       <option value="bayes">Intelligent mode only</option>
-       <option value="black_bayes">Full Power</option>
-    </select>
-  </div>
-  <div id="bl_div">
-    <label>Blacklist</label>
-    <input id="blacklist" type="text" placeholder="List of prohibited...">
-  </div>
-  <div id="bl_div">
-    <label>Filter Memory</label>
-    <select id="memory_size">
-       <option value="10">10</option>
-       <option value="25">25</option>
-       <option value="50">50</option>
-    </select>
-  </div>
-<button onclick="save_options()">Save</button>
-<div id="status"></div>
-</body>
+    <script type="text/javascript" src="options.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+  </body>
 </html>
 
