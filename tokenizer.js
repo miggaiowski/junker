@@ -1,7 +1,7 @@
 // tokenizer.js
 
 function tokenize(text) {
-    var content = post["content"].latinise().toLowerCase().split(/\W+/);
+    var content = text.latinise().toLowerCase().split(/\W+/);
     var filtered_content = new Array();
     
     content.forEach(function(word) {

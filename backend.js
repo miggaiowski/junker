@@ -34,8 +34,8 @@ JunkDic.prototype = {
   //words: Array of words,
   //Behavior: Return true in the first ocurrency of a word in the blacklist
   inBlacklist: function (content,callback){
-    // var tokens = tokenize(content);
-    var tokens = content.toLowerCase().split(" ");
+    var tokens = tokenize(content);
+    // var tokens = content.toLowerCase().split(" ");
     for (var word in tokens){
       //print("Running " + word);
       for (var bl in this.blacklist) {
