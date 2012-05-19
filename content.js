@@ -6,6 +6,8 @@ var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
 
+var classifier = new Classifier();
+
 chrome.extension.sendRequest({method: "getStatus"}, function(response) {
   //var stor = new Storage();
   if (response!=null){
@@ -45,10 +47,14 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  if (userData.inBlacklist(post.text_content)){
+  if (userData.inBlacklist(post.text_content) || classifier.isSpam(post)){
     setStoryRating(story_id, true);
     doTheHide(story);
     return;
+  }
+  else {
+    if (Math.random() > 0.5)
+      classifier.trainWith(post, "notjunk");
   }
 }
 
@@ -58,7 +64,7 @@ function getUid(){
 
 function doTheHide(node) {
   // var mostraSpam = userData.showSpam;
-  var mostraSpam = null;
+  var mostraSpam = true;
   if (!mostraSpam) 
     node.hide("slow");
   else {
@@ -98,6 +104,7 @@ function toggleJunk(node){
   } else {
     setStoryRating(story_id, true);
     doTheHide(node);
+    classifier.trainWith(userData.posts[story_id], "junk");
     return true;
   }
 }
