@@ -36,7 +36,7 @@ function newElement(el){
 
   
   if(userData.ratings[story_id]){ 
-    story.hide();
+    doTheHide(story);
     return;
   }
   
@@ -50,9 +50,25 @@ function newElement(el){
   
   if (userData.inBlacklist(post.text_content)){
     setStoryRating(story_id, true);
-    story.hide("slow");
+    doTheHide(story);
     return;
   }
+}
+
+function doTheHide(node) {
+  // var mostraSpam = userData.showSpam;
+  var mostraSpam = true;
+  if (!mostraSpam) 
+    node.hide();
+  else {
+    // node.css("opacity", 0.5);
+    node.fadeTo("slow", 0.3, null);
+    node.addClass("faded");
+  }
+}
+
+function doTheShow(node) {
+  node.fadeTo("slow", 1, null);
 }
 
 function addListenerMenu(node) {
@@ -70,25 +86,17 @@ function looseMatch(a, b) {
   return a.toLowerCase().match(b.toLowerCase());
 }
 
-function disactOnJunk(node) {
-  node.css("background-color", "#FFFFFF");
-}
-
-function actOnJunk(node) {
-  node.css("background-color", "#FFCCCC");
-}
-
 function toggleJunk(node){
   var story_id = getStoryId(node);
   
   if(userData.ratings[ story_id ]){
     setStoryRating(story_id, false);
-    disactOnJunk(node);
+    doTheShow(node);
     
     return false;   
   } else {
-    node.hide("slow");
     setStoryRating(story_id, true);
+    doTheHide(node);
     return true;
   }
 }
@@ -111,7 +119,9 @@ function addToList(node) {
 }
 
 function achaPai(node){
-  return $(node).parentsUntil("li").parent();
+  var bla = $(node).parentsUntil("li").parent().first();
+  console.info(bla);
+  return bla;
 }
 
 function existeMenuzinho() {
