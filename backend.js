@@ -124,7 +124,7 @@ Storage.prototype = {
       var idSon = userDic.getJSON();
       aux[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(aux);
-      console.info(aux);
+      // console.info(aux);
     }
     
   },

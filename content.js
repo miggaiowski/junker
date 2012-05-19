@@ -23,6 +23,7 @@ chrome.extension.sendRequest({method: "getStatus"}, function(response) {
 });
 
 function newElement(el) {
+  // console.info(userData.filterMode);
   var story = $(".uiUnifiedStory").not(".junker_known").first();
   if(!story.size()) return;
   
@@ -49,15 +50,15 @@ function newElement(el) {
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
 
-  if (userData.inBlacklist(post.raw_text)/* || classifier.isSpam(post)*/){
-    setStoryRating(story_id, true);
-    doTheHide(story);
-    return;
-  } else {
+  // if (userData.inBlacklist(post.raw_text)/* || classifier.isSpam(post)*/){
+  //   setStoryRating(story_id, true);
+  //   doTheHide(story);
+  //   return;
+  // } else {
     //if (Math.random() > 0.5)
     //  classifier.trainWith(post, "notjunk");
-  }
-/*
+  // }
+
   if (userData.filterMode == "bl_only") {
     if (userData.inBlacklist(post.raw_text)){
       setStoryRating(story_id, true);
@@ -88,7 +89,6 @@ function newElement(el) {
       if (Math.random() > 0.9)
         classifier.trainWith(post, "notjunk");
     }
-*/
   }
 }
 
