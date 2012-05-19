@@ -1,9 +1,18 @@
 document.body.addEventListener("DOMNodeInserted", newElement, false);
+
+chrome.extension.sendRequest({method: "getStatus"}, function(response) {
+  if (response!=null){
+   localStorage.perf = response.status; 
+  }
+  
+});
+
 var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
 
 var stor = new Storage();
+console.info(localStorage.perf);
 var userData = stor.getIdDict('0');
 
 // var post_data;
@@ -50,6 +59,7 @@ function newElement(el){
   
   if (userData.inBlacklist(post.text_content)){
     setStoryRating(story_id, true);
+    console.info(story);
     actOnJunk(story);
     return;
   }
