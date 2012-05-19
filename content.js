@@ -39,6 +39,9 @@ function newElement(el){
   var post = parsePost(story);  
   if (!post)
     return;
+    
+  if(post.author_id == getUid())
+    return;
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
@@ -47,6 +50,10 @@ function newElement(el){
     doTheHide(story);
     return;
   }
+}
+
+function getUid(){
+  return $('.uiMorePagerPrimary[ajaxify*="notifications"]').attr("ajaxify").match(/[0-9]+/)[0];
 }
 
 function doTheHide(node) {
