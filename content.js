@@ -49,6 +49,7 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
+  console.info(post);
   if (userData.inBlacklist(post.text_content) || classifier.isSpam(post)){
     setStoryRating(story_id, true);
     doTheHide(story);
