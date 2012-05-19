@@ -1,3 +1,9 @@
+.faded{
+  opacity: 0.5 !important;
+  -webkit-transition: opacity 0.5s linear;
+}
+
 .faded:hover{
   opacity: 1.0 !important;
+  -webkit-transition: opacity 0.5s linear;
 }

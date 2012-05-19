@@ -6,7 +6,7 @@ var nodeList = new Array();
 
 var globalContainer = $("#globalContainer").first();
 
-var classifier = new Classifier();
+//var classifier = new Classifier();
 
 chrome.extension.sendRequest({method: "getStatus"}, function(response) {
   //var stor = new Storage();
@@ -49,14 +49,14 @@ function newElement(el){
 
   userData.posts[story_id] = post;
   stor.saveIdDict(userData);
-  if (userData.inBlacklist(post.raw_text) || classifier.isSpam(post)){
+  if (userData.inBlacklist(post.raw_text)/* || classifier.isSpam(post)*/){
     setStoryRating(story_id, true);
     doTheHide(story);
     return;
   }
   else {
-    if (Math.random() > 0.5)
-      classifier.trainWith(post, "notjunk");
+    //if (Math.random() > 0.5)
+    //  classifier.trainWith(post, "notjunk");
   }
 }
 
@@ -76,6 +76,7 @@ function doTheHide(node) {
 }
 
 function doTheShow(node) {
+  node.removeClass("faded");
   node.fadeTo("slow", 1, null);
 }
 
@@ -104,8 +105,9 @@ function toggleJunk(node){
     return false;   
   } else {
     setStoryRating(story_id, true);
+  //  classifier.trainWith(userData.posts[story_id], "junk");
+    
     doTheHide(node);
-    classifier.trainWith(userData.posts[story_id], "junk");
     return true;
   }
 }
@@ -135,8 +137,8 @@ function achaPai(node){
 function existeMenuzinho() {
   var menuzinho = $(".uiContextualLayer").first();
   
-  if (menuzinho) {
-    if ( $("li.uiMenuXItem", menuzinho) ) {
+  if (menuzinho.length) {
+    if ( $(".uiMenuXSeparator", menuzinho).length ) {
       return true;
     }
   }
@@ -144,7 +146,7 @@ function existeMenuzinho() {
 }
 
 function async(fn) {
-  setTimeout(fn, 300);
+  setTimeout(fn, 50);
 }
 
 function sometimeWhen(existeMenuzinho, mudaMenu, postPai) {
@@ -186,7 +188,13 @@ function modifySpamMenuItem(cloned, postPai) {
       $(this).addClass('checked');
     else
       $(this).removeClass('checked');
+      
+    $(this).children().first().removeClass('highlighted');
     
+    async(function(){ 
+      $('#FB_HiddenContainer').trigger('click'); 
+      });
+      
   });
   
   cloned.mouseover(function (event) {

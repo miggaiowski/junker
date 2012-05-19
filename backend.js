@@ -106,8 +106,6 @@ JunkDic.prototype = {
 }
 
 
-
-
 //=================Storage Main Function ==============
 var  Storage = function () {
 }
@@ -126,6 +124,7 @@ Storage.prototype = {
       var idSon = userDic.getJSON();
       aux[idSon['id']] = idSon;
       localStorage.perf = JSON.stringify(aux);
+      console.info(aux);
     }
     
   },
