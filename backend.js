@@ -44,7 +44,8 @@ JunkDic.prototype = {
       //print("Running " + word);
       for (var bl in this.blacklist) {
         // console.info("Comparing token: " + tokens[word] + " with "+ this.blacklist[bl]);
-        if (levenshtein(tokens[word], this.blacklist[bl]) < 2) {
+        if (levenshtein(tokens[word], this.blacklist[bl]) == 0 ||
+            (tokens[word].length > 7 && levenshtein(tokens[word], this.blacklist[bl]) < 2)) {
           return true;
         }
       }
