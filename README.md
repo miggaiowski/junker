@@ -2,5 +2,5 @@ Junker
 ======
 Clean up your facebook news feed!
 
-Facebook Hackathon Brazil 2012
+The Winning app at Facebook Hackathon Brazil 2012
 UNICAMP
